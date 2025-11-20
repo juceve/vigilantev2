@@ -116,6 +116,7 @@ use App\Http\Livewire\Vigilancia\Vtareas;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\RrhhcontratoController;
 use App\Http\Controllers\TipoboletaController;
+use App\Http\Livewire\Admin\ListadoCuestionarios;
 use App\Http\Livewire\Admin\ListadoDesignacionesSupervisores;
 use App\Http\Livewire\Supervisores\Panel;
 use App\Http\Livewire\Vigilancia\Adelantos;
@@ -237,6 +238,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('admin/cronograma-dias-libres', CronogramaMensualEmpleados::class)->middleware('can:admin.cronogramadiaslibres')->name('admin.cronogramadiaslibres');
     Route::get('admin/resumen-operacional', ResumenOpercional::class)->middleware('can:admin.resumenoperacional')->name('admin.resumenoperacional');
     Route::get('admin/designaciones/supervisores/', ListadoDesignacionesSupervisores::class)->name('admin.designacionessupervisores');
+    Route::get('admin/listado-cuestionarios',ListadoCuestionarios::class)->name('admin.listadocuestionarios');
 
     Route::get('/admin/puntos-control-v2/{turnoId}', PuntosControlV2::class)->name('puntoscontrolv2');
 

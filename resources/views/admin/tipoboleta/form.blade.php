@@ -19,7 +19,7 @@
         </div>
 
         <div class="form-group d-none" id="div_rrhhtipodescuento_id">
-            {{ Form::label('rrhhtipodescuento_id') }}
+            {{ Form::label('rrhhtipodescuento_id', 'Tipo de Descuento') }}
 
             {{ Form::select('rrhhtipodescuento_id', $tipodescuentos, $tipoboleta->rrhhtipodescuento_id, ['class' => 'form-control' . ($errors->has('rrhhtipodescuento_id') ? ' is-invalid' : ''), 'placeholder' => 'Seleccione un descuento']) }}
             {!! $errors->first('rrhhtipodescuento_id', '<div class="invalid-feedback">:message</div>') !!}

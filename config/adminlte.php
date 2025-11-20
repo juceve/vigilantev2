@@ -340,6 +340,12 @@ return [
                 [
                     'text' => 'Designaciones',
                     'route' =>  'admin.designacionessupervisores',
+                    'icon'  =>  'fas fa-user-check',
+                    // 'can'   =>  'designaciones.index',
+                ],
+                 [
+                    'text' => 'Cuestionarios Diarios',
+                    'route' =>  'admin.listadocuestionarios',
                     'icon'  =>  'fas fa-clipboard',
                     // 'can'   =>  'designaciones.index',
                 ],
@@ -546,6 +552,12 @@ return [
                 ],
 
 
+                [
+                    'text' => 'Tipo Boletas',
+                    'route'  => 'tipoboletas.index',
+                    // 'can'   =>  'tipoboletas.index',
+                    'icon' => 'fas fa-ticket-alt'
+                ],
                 [
                     'text' => 'Tipo Bonos',
                     'route'  => 'rrhhtipobonos.index',
