@@ -10,10 +10,14 @@ use Livewire\Component;
 
 class Inspecciones extends Component
 {
-    public $designaciones;
+    public $designaciones, $inspeccionActiva;
     public function mount($designacion_id)
     {
         $this->designaciones = Designacionsupervisor::find($designacion_id);
+        $this->inspeccionActiva = Inspeccion::where('designacionsupervisor_id', $this->designaciones->id)
+            ->where('status', 1)
+            ->orderBy('id', 'DESC')
+            ->first();
     }
     public function render()
     {
@@ -24,11 +28,11 @@ class Inspecciones extends Component
 
     public function iniciarInspeccion($cliente_id)
     {
-        $inspeccionActiva = Inspeccion::where('designacionsupervisor_id', $this->designaciones->id)
+        $inspeccion = Inspeccion::where('designacionsupervisor_id', $this->designaciones->id)
             ->where('status', 1)
             ->get();
 
-        if ($inspeccionActiva->count() > 0) {
+        if ($inspeccion->count() > 0) {
             $this->emit('warning', 'Existen Inspeciones activas!');
             return;
         }
@@ -39,7 +43,9 @@ class Inspecciones extends Component
                 'cliente_id' => $cliente_id,
                 'inicio' => date('Y-m-d H:i:s')
             ]);
+
             DB::commit();
+            $this->inspeccionActiva = $inspeccion;
             Session::put('inspeccion_activa', $inspeccion);
             return redirect()->route('supervisores.panel');
             // $this->emit('success', 'Inspeccion creada correctamente');
@@ -51,16 +57,16 @@ class Inspecciones extends Component
 
     public function finalizarInspeccionActiva()
     {
-        if (Session::get('inspeccion_activa')) {
-            $inspeccionActiva = Session::get('inspeccion_activa');
-            $inspeccionActiva->fin = date('Y-m-d H:i:s');
-            $inspeccionActiva->status = false;
-            $inspeccionActiva->save();
+        if ($this->inspeccionActiva) {
+
+            $this->inspeccionActiva->fin = date('Y-m-d H:i:s');
+            $this->inspeccionActiva->status = false;
+            $this->inspeccionActiva->save();
 
             Session::put('inspeccion_activa', null);
             Session::forget('inspeccion_activa');
 
-            $this->emit('success', 'Inspección finalizada correctamente!');
+            return redirect()->route('home')->with('success', 'Inspección finalizada correctamente!');
         } else {
             $this->emit('warning', 'No existen inspecciones activas.');
         }

@@ -17,6 +17,7 @@ class Panel extends Component
         if (is_null($this->inspeccionActiva)) {
             return redirect()->route('home')->with('error', 'No existe una Inspección activa');
         }
+        
     }
     
     public function render()

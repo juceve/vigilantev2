@@ -6,10 +6,6 @@ use App\Models\Rrhhdescuento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Class RrhhdescuentoController
- * @package App\Http\Controllers
- */
 class RrhhdescuentoController extends Controller
 {
     public function data($contrato_id)
@@ -109,4 +105,6 @@ class RrhhdescuentoController extends Controller
             return response()->json(['success' => false, 'message' => $th->getMessage()]);
         }
     }
+
+    
 }

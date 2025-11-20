@@ -1,5 +1,6 @@
 <div>
     <div class="table-responsive">
+        
         <table class="table table-bordered table-striped">
             <thead>
                 <tr class="bg-success text-white text-center">
@@ -10,6 +11,7 @@
             </thead>
             <tbody>
                 @forelse ($designaciones->designacionsupervisorclientes as $item)
+                
                     <tr>
                         <td class="align-middle">
                             <strong>{{ $item->cliente->nombre }}</strong> <br>
@@ -18,20 +20,19 @@
                                 15:00H</span>
                         </td>
                         <td class="align-middle text-end">
-                            @if (Session::get('inspeccion_activa'))
-                                @if (Session::get('inspeccion_activa')->cliente_id === $item->cliente_id)
-                                    <button class="btn btn-secondary text-white" style="width: 95px"
-                                        onclick="finalizarInsp()">
-                                        <i class="fas fa-user-times"></i> <br> Finalizar
-                                    </button>
+                            @if ($inspeccionActiva)
+                                @if ($inspeccionActiva->cliente_id === $item->cliente_id)
+                                    <a href="{{route('supervisores.panel')}}" class="btn btn-info text-white" style="width: 100px">
+                                        <i class="fas fa-arrow-right"></i> <br> Continuar
+                                    </a>
                                 @else
-                                    <button class="btn btn-primary text-white" style="width: 95px"
+                                    <button class="btn btn-primary text-white" style="width: 100px"
                                         onclick="iniciarInsp({{ $item->cliente_id }})">
                                         <i class="fas fa-user-secret"></i> <br> Iniciar
                                     </button>
                                 @endif
                             @else
-                                <button class="btn btn-primary text-white" style="width: 95px"
+                                <button class="btn btn-primary text-white" style="width: 100px"
                                     onclick="iniciarInsp({{ $item->cliente_id }})">
                                     <i class="fas fa-user-secret"></i> <br> Iniciar
                                 </button>

@@ -110,4 +110,11 @@ class RrhhtipodescuentoController extends Controller
         return redirect()->route('rrhhtipodescuentos.index')
             ->with('success', 'Descento eliminado correctamente.');
     }
+
+    public function traeTipodescuento(Request $request)
+    {
+        $tipodescuento = Rrhhtipodescuento::find($request->rrhhtipodescuento_id);
+        return response()->json(['success' => true, 'message' => $tipodescuento]);
+
+    }
 }

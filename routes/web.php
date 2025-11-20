@@ -115,12 +115,12 @@ use App\Http\Livewire\Vigilancia\Vtareas;
 
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\RrhhcontratoController;
+use App\Http\Controllers\TipoboletaController;
 use App\Http\Livewire\Admin\ListadoDesignacionesSupervisores;
 use App\Http\Livewire\Supervisores\Panel;
 use App\Http\Livewire\Vigilancia\Adelantos;
 use App\Http\Livewire\Vigilancia\Asistencias;
 use App\Models\Empleado;
-use App\Models\Rrhhcontrato;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -185,7 +185,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('vigilancia/adelantos', Adelantos::class)->name('vigilancia.adelantos');
     Route::get('vigilancia/asistencias', Asistencias::class)->name('vigilancia.asistencias');
 
-    Route::get('supervisores/panel',Panel::class)->name('supervisores.panel');
+    Route::get('supervisores/panel', Panel::class)->name('supervisores.panel');
 
     Route::get('admin/visitas', Registrosvisita::class)->middleware('can:admin.registros.visitas')->name('admin.visitas');
     Route::get('admin/rondas', Registrosronda::class)->middleware('can:admin.registros.rondas')->name('admin.rondas');
@@ -256,7 +256,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('admin/ctrl-airbnb', CtrlAllAirbnb::class)->name('admin.ctrlallairbnb');
     Route::get('admin/designaciones/guardias', [DesignacioneController::class, 'designacioneguardia'])->name('admin.designacione-guardias');
     Route::get('admin/designaciones/selEmpleado/{empleado_id}', [DesignacioneController::class, 'seleccionarEmpleado'])->name('admin.selempleado');
-    
+
 
 
     Route::resource('registroguardias', RegistroguardiaController::class)->names('registroguardias');
@@ -274,6 +274,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('admin/rrhh/tipo-descuentos', RrhhtipodescuentoController::class)->names('rrhhtipodescuentos');
     Route::resource('admin/rrhh/estado-dotaciones', RrhhestadodotacionController::class)->names('rrhhestadodotacions');
     Route::resource('admin/parametros-generales', SistemaparametroController::class)->only(['edit', 'update', 'index'])->names('sistemaparametros');
+    Route::resource('admin/tipo-boletas', TipoboletaController::class)->names('tipoboletas');
+    Route::post('trae-tipodescuento', [RrhhtipodescuentoController::class, 'traeTipodescuento'])->name('traetipodescuento');
     // Route::resource('admin/tareas', TareaController::class)->names('tareas');
 
     Route::get('/ubicacion/{lat}/{lng}', function (string $lat, string $lng) {
@@ -281,7 +283,7 @@ Route::middleware(['auth'])->group(function () {
     })->name('ubicacion');
 
     Route::get('nuevoptctrl/{cliente_id}', Nuevoptctrl::class)->name('nuevoptctrl');
-    
+
     Route::get('pdf/contrato-vigente/{fecha}', [RrhhcontratoController::class, 'contratoPdf'])->name('pdf.contrato-vigente');
     Route::get('pdf/kardex-empleado/{empleadoID}', [EmpleadoController::class, 'pdfKardex'])->name('pdf.kardex');
     Route::get('pdf/visitas/', [VisitaController::class, 'pdfVisitas'])->name('pdf.visitas');
@@ -311,7 +313,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('pdf/cotizacion/{data}', [CitecotizacionController::class, 'previsualizacion'])->name('pdf.cotizacion');
     Route::get('admin/citescotizacion', ListadoCiteCotizacion::class)->middleware('can:admin.generador.cotizacion')->name('admin.citescotizacion');
 
-    
+
 
     Route::post('/subir-archivo', [UploadsController::class, 'uploadFile'])->name('uploadFile');
 
