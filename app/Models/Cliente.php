@@ -46,4 +46,9 @@ class Cliente extends Model
     {
         return $this->hasMany(Ronda::class, 'cliente_id', 'id');
     }
+
+    public function cuestionarios(): HasMany
+    {
+        return $this->hasMany(ChklListaschequeo::class, 'cliente_id', 'id');
+    }
 }

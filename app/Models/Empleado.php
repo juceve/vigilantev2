@@ -65,4 +65,8 @@ class Empleado extends Model
     {
         return $this->hasMany(Rrhhcontrato::class, 'empleado_id', 'id');
     }
+    public function rrhhpermisos()
+{
+    return $this->hasMany(Rrhhpermiso::class, 'empleado_id');
+}
 }

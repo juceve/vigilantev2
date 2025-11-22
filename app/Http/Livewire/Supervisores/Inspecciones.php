@@ -47,7 +47,7 @@ class Inspecciones extends Component
             DB::commit();
             $this->inspeccionActiva = $inspeccion;
             Session::put('inspeccion_activa', $inspeccion);
-            return redirect()->route('supervisores.panel');
+            return redirect()->route('supervisores.panel',$this->inspeccionActiva->id);
             // $this->emit('success', 'Inspeccion creada correctamente');
         } catch (\Throwable $th) {
             DB::rollBack();

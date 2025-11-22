@@ -186,7 +186,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('vigilancia/adelantos', Adelantos::class)->name('vigilancia.adelantos');
     Route::get('vigilancia/asistencias', Asistencias::class)->name('vigilancia.asistencias');
 
-    Route::get('supervisores/panel', Panel::class)->name('supervisores.panel');
+    Route::get('supervisores/panel/{inspeccion_id}', Panel::class)->name('supervisores.panel');
+    Route::get('supervisores/ejecutar-cuestionario/{cuestionario_id}/{inspeccion_id}', App\Http\Livewire\Supervisores\EjecutarCuestionario::class)->name('supervisores.ejecutarcuestionario');
 
     Route::get('admin/visitas', Registrosvisita::class)->middleware('can:admin.registros.visitas')->name('admin.visitas');
     Route::get('admin/rondas', Registrosronda::class)->middleware('can:admin.registros.rondas')->name('admin.rondas');

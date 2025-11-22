@@ -12,7 +12,8 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-6 col-md-4 d-grid mb-3">
-                    <button class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4">
+                    <button class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4"
+                        wire:click='iniciarCuestionario'>
 
                         <i class="far fa-clipboard" style="font-size: 30px;"></i> <br>
                         <small>Supervisión</small>
@@ -64,8 +65,18 @@
     </div>
 
     <div class="container d-grid">
-        <button class="btn btn-secondary text-warning py-3" onclick="finalizarInsp()">Finalizar Inspección <i
-                class="fas fa-sign-out-alt"></i></button>
+        <button class="btn btn-secondary text-warning py-3" onclick="finalizarInsp()" wire:loading.attr="disabled">
+
+            <div wire:loading wire:target="finalizarInspeccionActiva">
+                Procesando... <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            </div>
+            <div wire:loading.remove wire:target="finalizarInspeccionActiva">
+                Finalizar Inspección <i class="fas fa-sign-out-alt"></i>
+            </div>
+
+
+
+        </button>
     </div>
 </div>
 @section('js')
@@ -86,5 +97,37 @@
                 }
             });
         }
+    </script>
+    <script>
+        Livewire.on('openPreguntaCuestionario', data => {
+            let opciones = {};
+            data.forEach(item => {
+                opciones[item.id] = item.titulo;
+            });
+
+            Swal.fire({
+                 icon: 'info',
+                title: 'Selecciona un cuestionario',
+                text: 'Debes elegir un cuestionario para continuar',
+                input: 'select',
+                inputOptions: opciones,
+                inputPlaceholder: 'Elige una opción...',
+                showCancelButton: true,
+                confirmButtonText: 'Continuar',
+                allowOutsideClick: false,
+                inputValidator: value => {
+                    return new Promise((resolve) => {
+                        if (value) resolve();
+                        else resolve('Debes seleccionar un cuestionario');
+                    });
+                }
+            }).then(result => {
+                if (result.isConfirmed) {
+                    const cuestionarioId = result.value;
+                    // Redirige según tu ruta
+                    window.location.href = `../ejecutar-cuestionario/${cuestionarioId}/${@json($inspeccionActiva->id)}`;
+                }
+            });
+        });
     </script>
 @endsection

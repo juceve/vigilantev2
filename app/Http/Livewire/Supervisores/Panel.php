@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Supervisores;
 
+use App\Models\Inspeccion;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
@@ -9,10 +10,11 @@ use Livewire\Component;
 class Panel extends Component
 {
     public $inspeccionActiva;
+    public $procesando = false;
 
-    public function mount()
+    public function mount($inspeccion_id)
     {
-        $this->inspeccionActiva = Session::get('inspeccion_activa');
+        $this->inspeccionActiva = Inspeccion::find($inspeccion_id);
 
         if (is_null($this->inspeccionActiva)) {
             return redirect()->route('home')->with('error', 'No existe una Inspección activa');
@@ -29,7 +31,7 @@ class Panel extends Component
     public function finalizarInspeccionActiva()
     {
         if ($this->inspeccionActiva) {
-
+            $this->procesando = true;
             $this->inspeccionActiva->fin = date('Y-m-d H:i:s');
             $this->inspeccionActiva->status = false;
             $this->inspeccionActiva->save();
@@ -40,6 +42,18 @@ class Panel extends Component
             return redirect()->route('home')->with('success', 'Inspección finalizada correctamente!');
         } else {
             $this->emit('warning', 'No existen inspecciones activas.');
+        }
+    }
+
+    public function iniciarCuestionario()
+    {
+        $cuestioinarios = $this->inspeccionActiva->cliente->cuestionarios;
+        $cuestionarios = $cuestioinarios->toArray();
+        if ($cuestioinarios->count() == 0) {
+            $this->emit('warning', 'El cliente no tiene cuestionarios asignados.');
+            return;
+        } else {
+            $this->emit('openPreguntaCuestionario',$cuestioinarios);
         }
     }
 }

@@ -22,7 +22,7 @@
                         <td class="align-middle text-end">
                             @if ($inspeccionActiva)
                                 @if ($inspeccionActiva->cliente_id === $item->cliente_id)
-                                    <a href="{{route('supervisores.panel')}}" class="btn btn-info text-white" style="width: 100px">
+                                    <a href="{{route('supervisores.panel',$inspeccionActiva->id)}}" class="btn btn-info text-white" style="width: 100px">
                                         <i class="fas fa-arrow-right"></i> <br> Continuar
                                     </a>
                                 @else
