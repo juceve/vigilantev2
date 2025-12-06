@@ -158,6 +158,8 @@ class EjecutarCuestionario extends Component
         ]);
         $this->emit('openConfirmacion');
     }
+
+
     public function registrarRespuestas($notas)
     {
         $this->procesando = true;
@@ -194,6 +196,7 @@ class EjecutarCuestionario extends Component
             }
 
             DB::commit();
+            $this->emit('guardado');
             return redirect()->route('supervisores.panel', $this->inspeccionActiva->id);
         } catch (\Throwable $th) {
             DB::rollBack();

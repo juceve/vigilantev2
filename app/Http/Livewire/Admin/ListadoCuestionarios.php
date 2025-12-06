@@ -26,7 +26,7 @@ class ListadoCuestionarios extends Component
 
     public function resetAll()
     {
-        $this->reset(['cliente_id', 'titulo', 'descripcion', 'activo', 'modalMode', 'preguntas', 'pregunta', 'tipoboleta_id', 'requerida']);
+        $this->reset(['cliente_id', 'titulo', 'descripcion', 'activo', 'modalMode', 'preguntas', 'pregunta', 'tipoboleta_id', 'requerida','modePregunta']);
     }
 
     public function create()

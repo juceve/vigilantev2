@@ -221,7 +221,7 @@
                                             <i class="fas fa-arrow-down"></i></button>
                                     @else
                                         <button class="btn btn-sm btn-outline-warning btn-block"
-                                            wire:click="actualizarPregunta">Actualizar
+                                            wire:click="actualizarPregunta">Agregar Cambios
                                             <i class="fas fa-arrow-down"></i></button>
                                     @endif
 
@@ -291,7 +291,7 @@
                                 @break
 
                                 @case('Editar')
-                                    <button type="button" class="btn btn-warning" onclick='update()'>Actualizar <i
+                                    <button type="button" class="btn btn-warning" onclick='update()'>Guardar Cambios <i
                                             class="fas fa-save"></i></button>
                                 @break
 

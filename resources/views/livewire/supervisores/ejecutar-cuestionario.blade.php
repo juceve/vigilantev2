@@ -1,6 +1,6 @@
 <div style="margin-top: 95px">
-        @section('title')
-    {{ $cuestionario->titulo }}
+    @section('title')
+        {{ $cuestionario->titulo }}
     @endsection
     <div class="alert alert-secondary" role="alert">
         <span class="text-secondary" style="margin-left: 1rem">
@@ -108,14 +108,17 @@
             @endif
             <hr>
             <div class="d-grid">
-                <button class="btn btn-primary btn-lg" wire:click="validar" wire:loading.attr="disabled">
+                <button class="btn btn-primary btn-lg mb-2" wire:click="validar" wire:loading.attr="disabled">
                     <i class="fas fa-save"></i> Guardar Respuestas
+                </button>
+                <button onclick="salida()" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-arrow-left"></i> Salir sin guardar
                 </button>
             </div>
             {{-- @dump($respuestas) --}}
         </div>
     </div>
-    
+
 </div>
 @section('js')
     <script>
@@ -167,6 +170,25 @@
                 }
             });
         });
+    </script>
+
+    <script>
+        function salida() {
+            Swal.fire({
+                title: "¿Seguro desea salir?",
+                text: "Se perderán todos los cambios",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#1abc9c",
+                cancelButtonColor: "#2c3e50",
+                confirmButtonText: "Si, deseo salir!",
+                cancelButtonText: "No, continuaré"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{{ route('supervisores.panel', $inspeccionActiva->id) }}";
+                }
+            });
+        }
     </script>
 
     <script>
