@@ -12,13 +12,20 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-6 col-md-4 d-grid mb-3">
-                    <button class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4"
+                    <a href="{{ route('supervisores.listadosupervisiones', $inspeccionActiva->id) }}"
+                        class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4">
+
+                        <i class="far fa-clipboard" style="font-size: 30px;"></i> <br>
+                        <small>Supervisión</small>
+
+                    </a>
+                    {{-- <button class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4"
                         wire:click='iniciarCuestionario'>
 
                         <i class="far fa-clipboard" style="font-size: 30px;"></i> <br>
                         <small>Supervisión</small>
 
-                    </button>
+                    </button> --}}
                 </div>
                 <div class="col-6 col-md-4 d-grid mb-3">
                     <button class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4 ">
@@ -106,7 +113,7 @@
             });
 
             Swal.fire({
-                 icon: 'info',
+                icon: 'info',
                 title: 'Selecciona un cuestionario',
                 text: 'Debes elegir un cuestionario para continuar',
                 input: 'select',
@@ -125,7 +132,8 @@
                 if (result.isConfirmed) {
                     const cuestionarioId = result.value;
                     // Redirige según tu ruta
-                    window.location.href = `../ejecutar-cuestionario/${cuestionarioId}/${@json($inspeccionActiva->id)}`;
+                    window.location.href =
+                        `../ejecutar-cuestionario/${cuestionarioId}/${@json($inspeccionActiva->id)}`;
                 }
             });
         });

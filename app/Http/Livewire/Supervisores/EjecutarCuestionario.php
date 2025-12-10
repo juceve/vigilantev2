@@ -6,7 +6,11 @@ use App\Models\ChklEjecucione;
 use App\Models\ChklIncumplimiento;
 use App\Models\ChklListaschequeo;
 use App\Models\Designacione;
+use App\Models\Empleado;
 use App\Models\Inspeccion;
+use App\Models\Rrhhcontrato;
+use App\Models\Rrhhdescuento;
+use App\Models\SupBoleta;
 use App\Models\Tipoboleta;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -36,13 +40,15 @@ class EjecutarCuestionario extends Component
                 'observacion' => null,
                 'tipoboleta' => $pregunta->tipoboleta_id
                     ? Tipoboleta::where('id', $pregunta->tipoboleta_id)
-                    ->select('id', 'nombre', 'monto_descuento')
+                    ->select('id', 'nombre', 'monto_descuento','rrhhtipodescuento_id')
                     ->first()
                     ->toArray()
                     : [],
                 'empleados' => [],
             ];
         }
+
+        
     }
 
     protected $listeners = ['agregarEmpleado', 'registrarRespuestas'];
@@ -182,22 +188,43 @@ class EjecutarCuestionario extends Component
 
                 ]);
                 if ($respuesta['ok'] === false) {
+                    // dd($respuesta['tipoboleta']);
                     foreach ($respuesta['empleados'] as $empleado) {
                         $incumplimiento = ChklIncumplimiento::create([
                             'chkl_respuesta_id' => $chklrespuesta->id,
                             'empleado_id' => $empleado,
                         ]);
+                        if ($respuesta['tipoboleta'] && isset($respuesta['tipoboleta']['id'])) {
+                            // $tipoboleta = Tipoboleta::find($respuesta['tipoboleta']['id']);
+                            $empleadoSel = Empleado::find($empleado);
+                            $boleta = SupBoleta::create([
+                                'fechahora' => date('Y-m-d H:i:s'),
+                                'cliente_id' => $this->inspeccionActiva->cliente_id,
+                                'empleado_id' => $empleado,
+                                'tipoboleta_id' => $respuesta['tipoboleta']['id'],
+                                'supervisor_id' => $this->inspeccionActiva->designacionsupervisor->empleado_id,
+                                'detalles' => $respuesta['tipoboleta']['nombre'] . '|' . date('Y-m-d H:i:s') . '|' . $empleadoSel->nombres . ' ' . $empleadoSel->apellidos . '|' . $this->inspeccionActiva->cliente->nombre,
+                                'descuento' => $respuesta['tipoboleta']['monto_descuento'],
+                            ]);
+                            if ($respuesta['tipoboleta']['monto_descuento'] > 0) {
+                                $contrato = traeContratoActivoEmpleadoId($empleadoSel->id);
+                                $descuento = Rrhhdescuento::create([
+                                    'rrhhcontrato_id' => $contrato->id,
+                                    'fecha' => date('Y-m-d'),
+                                    'rrhhtipodescuento_id' =>$respuesta['tipoboleta']['rrhhtipodescuento_id'],
+                                    'empleado_id' => $empleadoSel->id,
+                                    'cantidad' => 1,
+                                    'monto' => $respuesta['tipoboleta']['monto_descuento']
+                                ]);
+                            }
+                        }
                     }
-                }
-
-                if ($respuesta['tipoboleta'] && isset($respuesta['tipoboleta']['id'])) {
-                    // REGISTRAR LA BOLETA SEGÚN LÓGICA DEL NEGOCIO
                 }
             }
 
             DB::commit();
             $this->emit('guardado');
-            return redirect()->route('supervisores.panel', $this->inspeccionActiva->id);
+            return redirect()->route('supervisores.panel', $this->inspeccionActiva->id)->with('success','Cuestionario registrado correctamente.');
         } catch (\Throwable $th) {
             DB::rollBack();
             $this->procesando = false;

@@ -185,7 +185,7 @@
                 cancelButtonText: "No, continuaré"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "{{ route('supervisores.panel', $inspeccionActiva->id) }}";
+                    window.location.href = "{{ route('supervisores.listadosupervisiones', $inspeccionActiva->id) }}";
                 }
             });
         }

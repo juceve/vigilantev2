@@ -719,6 +719,19 @@ function traerDesignacionContrato($rrhhcontrato_id)
         return null;
     }
 }
+function traeContratoActivoEmpleadoId($empleado_id)
+{
+    $contrato = Rrhhcontrato::where('empleado_id', $empleado_id)
+        ->where('activo', true)
+        ->whereDate('fecha_inicio', '<=', now())
+        ->where(function ($q) {
+            $q->whereNull('fecha_fin')
+                ->orWhereDate('fecha_fin', '>=', now());
+        })
+        ->first();
+
+        return $contrato;
+}
 
 function numeroALetras($numero, $convertirDecimalALetras = false)
 {
