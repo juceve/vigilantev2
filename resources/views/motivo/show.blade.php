@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('template_title')
-    {{ $motivo->name ?? "{{ __('Show') Motivo" }}
+Info Motivo
 @endsection
 
 @section('content')

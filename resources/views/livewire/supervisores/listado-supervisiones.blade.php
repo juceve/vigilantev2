@@ -10,7 +10,7 @@
             </div>
             <div class="col-10">
                 <span class="text-secondary">
-                    <i class="fas fa-building"></i> <strong>{{ $inspeccionActiva->cliente->nombre }}</strong>
+                    <i class="fas fa-building"></i> <strong> {{ $inspeccionActiva->cliente->nombre }}</strong>
                 </span>
             </div>
         </div>
@@ -25,8 +25,11 @@
             </div>
             <div class="card-body">
                 <div class="input-group input-group-sm mb-3">
-                    <span class="input-group-text" id="basic-addon1">Fecha</span>
-                    <input type="date" class="form-control">
+                    <span class="input-group-text" id="basic-addon1">Del</span>
+                    <input type="date" class="form-control" wire:model="fechaInicio">
+               &nbsp;
+                    <span class="input-group-text" id="basic-addon2">Al</span>
+                    <input type="date" class="form-control" wire:model="fechaFin">
                 </div>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped" style="font-size: 11px;">
@@ -43,9 +46,10 @@
                                     <td class="align-middle">{{$item->fecha}}</td>
                                     <td class="align-middle">{{ $item->chklListaschequeo->titulo }}</td>
                                     <td class="align-middle text-center">
-                                        <button class="btn btn-sm btn-info">
+                                        <a href="{{ route('supervisores.infocuestionario', [$item->id,$inspeccionActiva->id]) }}"
+                                            class="btn btn-sm btn-info">
                                             <i class="fas fa-eye"></i>
-                                        </button>
+                                        </a>
                                     </td>
                                 </tr>
                             @empty

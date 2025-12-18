@@ -224,7 +224,7 @@ class EjecutarCuestionario extends Component
 
             DB::commit();
             $this->emit('guardado');
-            return redirect()->route('supervisores.panel', $this->inspeccionActiva->id)->with('success','Cuestionario registrado correctamente.');
+            return redirect()->route('supervisores.listadosupervisiones', $this->inspeccionActiva->id)->with('success','Cuestionario registrado correctamente.');
         } catch (\Throwable $th) {
             DB::rollBack();
             $this->procesando = false;

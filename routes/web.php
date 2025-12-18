@@ -96,6 +96,7 @@ use App\Http\Livewire\Customer\Rondas;
 use App\Http\Livewire\Customer\Visitas;
 use App\Http\Livewire\Propietarios\MisResidencias;
 use App\Http\Livewire\Propietarios\Pases;
+use App\Http\Livewire\Supervisores\InfoCuestionario;
 use App\Http\Livewire\Vigilancia\Activacubrerelevos;
 use App\Http\Livewire\Vigilancia\Checkairbnb;
 use App\Http\Livewire\Vigilancia\ControlFlujos;
@@ -189,6 +190,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('supervisores/panel/{inspeccion_id}', Panel::class)->name('supervisores.panel');
     Route::get('supervisores/ejecutar-cuestionario/{cuestionario_id}/{inspeccion_id}', App\Http\Livewire\Supervisores\EjecutarCuestionario::class)->name('supervisores.ejecutarcuestionario');
     Route::get('supervisores/listado-supervisiones/{inspeccion_id}', App\Http\Livewire\Supervisores\ListadoSupervisiones::class)->name('supervisores.listadosupervisiones');
+    Route::get('supervisores/info-cuestionario/{ejecucion_id}/{inspeccion_id}', InfoCuestionario::class)->name('supervisores.infocuestionario');
 
     Route::get('admin/visitas', Registrosvisita::class)->middleware('can:admin.registros.visitas')->name('admin.visitas');
     Route::get('admin/rondas', Registrosronda::class)->middleware('can:admin.registros.rondas')->name('admin.rondas');
