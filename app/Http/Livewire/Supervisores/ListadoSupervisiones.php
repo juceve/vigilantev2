@@ -10,7 +10,8 @@ use Livewire\WithPagination;
 
 class ListadoSupervisiones extends Component
 {
-    use WithPagination;
+    use WithPagination;    
+    protected $paginationTheme = "bootstrap";
     public $inspeccionActiva, $fechaInicio, $fechaFin;
 
     public function mount($inspeccion_id)
@@ -35,7 +36,7 @@ class ListadoSupervisiones extends Component
                 Carbon::parse($this->fechaFin)->endOfDay(),
             ])
             ->orderBy('id','desc')
-            ->get();
+            ->paginate(3);
         return view('livewire.supervisores.listado-supervisiones', compact('ejecuciones'))->extends('layouts.app');
     }
 
@@ -56,11 +57,13 @@ class ListadoSupervisiones extends Component
         if ($this->fechaInicio > $this->fechaFin) {
             $this->fechaFin = $this->fechaInicio;
         }
+        $this->resetPage();
     }
     public function updatedFechaFin()
     {
         if ($this->fechaFin < $this->fechaInicio) {
             $this->fechaInicio = $this->fechaFin;
         }
+        $this->resetPage();
     }
 }

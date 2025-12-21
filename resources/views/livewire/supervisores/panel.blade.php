@@ -28,12 +28,12 @@
                     </button> --}}
                 </div>
                 <div class="col-6 col-md-4 d-grid mb-3">
-                    <button class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4 ">
+                    <a href="{{ route('supervisores.listadoboletas', $inspeccionActiva->id) }}" class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4 ">
 
                         <i class="fas fa-receipt" style="font-size: 30px;"></i> <br>
                         <small>Boletas</small>
 
-                    </button>
+                    </a>
                 </div>
                 <div class="col-6 col-md-4 d-grid mb-3">
                     <button class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4 ">

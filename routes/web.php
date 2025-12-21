@@ -190,7 +190,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('supervisores/panel/{inspeccion_id}', Panel::class)->name('supervisores.panel');
     Route::get('supervisores/ejecutar-cuestionario/{cuestionario_id}/{inspeccion_id}', App\Http\Livewire\Supervisores\EjecutarCuestionario::class)->name('supervisores.ejecutarcuestionario');
     Route::get('supervisores/listado-supervisiones/{inspeccion_id}', App\Http\Livewire\Supervisores\ListadoSupervisiones::class)->name('supervisores.listadosupervisiones');
+    Route::get('supervisores/listado-boletas/{inspeccion_id}', App\Http\Livewire\Supervisores\ListadoBoletas::class)->name('supervisores.listadoboletas');
+    Route::get('supervisores/emitir-boleta/{inspeccion_id}', App\Http\Livewire\Supervisores\EmitirBoleta::class)->name('supervisores.emitirboleta');
     Route::get('supervisores/info-cuestionario/{ejecucion_id}/{inspeccion_id}', InfoCuestionario::class)->name('supervisores.infocuestionario');
+
 
     Route::get('admin/visitas', Registrosvisita::class)->middleware('can:admin.registros.visitas')->name('admin.visitas');
     Route::get('admin/rondas', Registrosronda::class)->middleware('can:admin.registros.rondas')->name('admin.rondas');

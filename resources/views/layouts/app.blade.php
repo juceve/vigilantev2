@@ -466,13 +466,14 @@
         @yield('content')
     </main>
 
-
+    
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
     <script src="{{ asset('web/js/scripts.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    {{-- <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script> --}}
+    {{--
+    <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script> --}}
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
         integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
     @livewireScripts
@@ -604,13 +605,13 @@
                 ...materialSwalConfig,
                 icon: 'warning',
                 title: 'Atención',
-                text: message,                
+                text: message,
                 confirmButtonColor: '#1abc9c'
             });
         });
 
         // Navbar scroll effect
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', function () {
             const navbar = document.querySelector('.material-navbar');
             if (window.scrollY > 50) {
                 navbar.classList.add('scrolled');
@@ -620,7 +621,7 @@
         });
 
         // Smooth transitions on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.3s ease-in-out';
 
@@ -633,7 +634,7 @@
     @stack('scripts')
     <script>
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
+            window.addEventListener('load', function () {
                 navigator.serviceWorker.register('/service-worker.js')
                     .then(reg => console.log('Loaded App'))
                     .catch(err => console.error('0'));

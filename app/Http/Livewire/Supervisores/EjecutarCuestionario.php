@@ -203,7 +203,7 @@ class EjecutarCuestionario extends Component
                                 'empleado_id' => $empleado,
                                 'tipoboleta_id' => $respuesta['tipoboleta']['id'],
                                 'supervisor_id' => $this->inspeccionActiva->designacionsupervisor->empleado_id,
-                                'detalles' => $respuesta['tipoboleta']['nombre'] . '|' . date('Y-m-d H:i:s') . '|' . $empleadoSel->nombres . ' ' . $empleadoSel->apellidos . '|' . $this->inspeccionActiva->cliente->nombre,
+                                'detalles' => 'Emisión por incumplimiento en Cuestionario de Control',
                                 'descuento' => $respuesta['tipoboleta']['monto_descuento'],
                             ]);
                             if ($respuesta['tipoboleta']['monto_descuento'] > 0) {
