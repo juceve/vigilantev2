@@ -307,65 +307,71 @@ return [
         ],
         // MENU SIDEBAR
         [
-            'text'   => 'Inicio',
-            'icon'   => 'fas fa-fw fa-home',
-            'route'  => 'home',
-            'can'  => 'home',
+            'text' => 'Inicio',
+            'icon' => 'fas fa-fw fa-home',
+            'route' => 'home',
+            'can' => 'home',
         ],
         ['header' => 'Operativa'],
 
 
         [
-            'text'    => 'Guardias',
-            'icon'    => 'fas fa-fw fa-user-tag',
+            'text' => 'Guardias',
+            'icon' => 'fas fa-fw fa-user-tag',
             'submenu' => [
                 [
                     'text' => 'Designaciones',
-                    'route' =>  'designaciones.index',
-                    'icon'  =>  'fas fa-clipboard',
-                    'can'   =>  'designaciones.index',
+                    'route' => 'designaciones.index',
+                    'icon' => 'fas fa-clipboard',
+                    'can' => 'designaciones.index',
                 ],
                 [
                     'text' => 'Historial Designaciones',
-                    'route' =>  'admin.designacione-guardias',
-                    'icon'  =>  'fas fa-history',
-                    'can'   =>  'designaciones.index',
+                    'route' => 'admin.designacione-guardias',
+                    'icon' => 'fas fa-history',
+                    'can' => 'designaciones.index',
                 ],
             ],
         ],
         [
-            'text'    => 'Supervisores',
-            'icon'    => 'fas fa-fw fa-user-secret',
+            'text' => 'Supervisores',
+            'icon' => 'fas fa-fw fa-user-secret',
             'submenu' => [
                 [
                     'text' => 'Designaciones',
-                    'route' =>  'admin.designacionessupervisores',
-                    'icon'  =>  'fas fa-user-check',
+                    'route' => 'admin.designacionessupervisores',
+                    'icon' => 'fas fa-user-check',
                     // 'can'   =>  'designaciones.index',
                 ],
-                 [
+                [
+                    'text' => 'Caja Chica',
+                    'route' => 'admin.cajachica',
+                    'icon' => 'fas fa-wallet',
+                    // 'can'   =>  'designaciones.index',
+                ],
+                [
                     'text' => 'Elaboración de Checklist',
-                    'route' =>  'admin.listadocuestionarios',
-                    'icon'  =>  'fas fa-clipboard',
+                    'route' => 'admin.listadocuestionarios',
+                    'icon' => 'fas fa-clipboard',
                     // 'can'   =>  'designaciones.index',
                 ],
             ],
         ],
 
         [
-            'text'    => 'Recursos Humanos',
-            'icon'    => 'fas fa-fw fa-users-cog',
+            'text' => 'Recursos Humanos',
+            'icon' => 'fas fa-fw fa-users-cog',
             'submenu' => [
                 [
                     'text' => 'Empleados',
-                    'url'  => 'admin/empleados',
-                    'can'   =>  'empleados.index',
+                    'url' => 'admin/empleados',
+                    'can' => 'empleados.index',
                     'icon' => 'fas fa-fw fa-users'
                 ],
                 [
                     'text' => 'Sueldos',
-                    'route'  => 'admin.sueldos',
-                    'can'   =>  'rrhhsueldos.index',
+                    'route' => 'admin.sueldos',
+                    'can' => 'rrhhsueldos.index',
                     'icon' => 'fas fa-fw fa-dollar-sign'
                 ],
                 // [
@@ -375,151 +381,151 @@ return [
                 //     'can'   =>  'rrhhctrlasistencias',
                 // ],
                 [
-                    'text'  =>  'Asistencias Web',
-                    'route' =>  'admin.asistencias',
-                    'icon'  =>  'fas fa-mobile-alt',
-                    'can'   =>  'empleados.index',
+                    'text' => 'Asistencias Web',
+                    'route' => 'admin.asistencias',
+                    'icon' => 'fas fa-mobile-alt',
+                    'can' => 'empleados.index',
                 ],
             ],
         ],
         [
-            'text'    => 'Registros',
-            'icon'    => 'fas fa-fw fa-folder-open',
+            'text' => 'Registros',
+            'icon' => 'fas fa-fw fa-folder-open',
             'submenu' => [
 
                 [
-                    'text'  =>  'Pánico',
-                    'route' =>  'admin.regactividad',
-                    'icon'  =>  'fas fa-shield-alt',
-                    'can'   =>  'admin.registros.panico',
+                    'text' => 'Pánico',
+                    'route' => 'admin.regactividad',
+                    'icon' => 'fas fa-shield-alt',
+                    'can' => 'admin.registros.panico',
                 ],
                 [
-                    'text'  =>  'Visitas con Pases',
-                    'route' =>  'admin.flujopases',
-                    'icon'  =>  'fas fa-fw fa-qrcode',
-                    'can'   =>  'admin.registros.visitas',
+                    'text' => 'Visitas con Pases',
+                    'route' => 'admin.flujopases',
+                    'icon' => 'fas fa-fw fa-qrcode',
+                    'can' => 'admin.registros.visitas',
                 ],
                 [
-                    'text'  =>  'Visitas',
-                    'route' =>  'admin.visitas',
-                    'icon'  =>  'fas fa-fw fa-glasses',
-                    'can'   =>  'admin.registros.visitas',
+                    'text' => 'Visitas',
+                    'route' => 'admin.visitas',
+                    'icon' => 'fas fa-fw fa-glasses',
+                    'can' => 'admin.registros.visitas',
                 ],
                 [
-                    'text'  =>  'Rondas',
-                    'route' =>  'admin.rondas',
-                    'can'   =>  'admin.registros.rondas',
-                    'icon'  =>  'fas fa-fw fa-street-view'
+                    'text' => 'Rondas',
+                    'route' => 'admin.rondas',
+                    'can' => 'admin.registros.rondas',
+                    'icon' => 'fas fa-fw fa-street-view'
                 ],
                 [
-                    'text'  =>  'Novedades',
-                    'route' =>  'admin.novedades',
-                    'can'   =>  'admin.registros.novedades',
-                    'icon'  =>  'fas fa-fw fa-newspaper'
+                    'text' => 'Novedades',
+                    'route' => 'admin.novedades',
+                    'can' => 'admin.registros.novedades',
+                    'icon' => 'fas fa-fw fa-newspaper'
                 ],
                 [
-                    'text'  =>  'Tareas',
-                    'route' =>  'admin.tareas',
-                    'can'   =>  'tareas.index',
-                    'icon'  =>  'fas fa-fw fa-tasks'
+                    'text' => 'Tareas',
+                    'route' => 'admin.tareas',
+                    'can' => 'tareas.index',
+                    'icon' => 'fas fa-fw fa-tasks'
                 ],
                 [
-                    'text'  =>  'Hombre Vivo',
-                    'route' =>  'admin.hombre_vivo',
-                    'can'   =>  'admin.hombre_vivo',
-                    'icon'  =>  'fas fa-fw fa-heartbeat'
+                    'text' => 'Hombre Vivo',
+                    'route' => 'admin.hombre_vivo',
+                    'can' => 'admin.hombre_vivo',
+                    'icon' => 'fas fa-fw fa-heartbeat'
                 ],
 
 
             ],
         ],
         [
-            'text'    => 'Reportes',
-            'icon'    => 'fas fa-fw fa-flag',
+            'text' => 'Reportes',
+            'icon' => 'fas fa-fw fa-flag',
             'submenu' => [
                 [
-                    'text'  =>  'Cronograma Mensual',
-                    'route' =>  'admin.cronogramadiaslibres',
-                    'can'   =>  'admin.cronogramadiaslibres',
-                    'icon'  =>  'fas fa-fw fa-calendar-check'
+                    'text' => 'Cronograma Mensual',
+                    'route' => 'admin.cronogramadiaslibres',
+                    'can' => 'admin.cronogramadiaslibres',
+                    'icon' => 'fas fa-fw fa-calendar-check'
                 ],
                 [
-                    'text'  =>  'Resumen Operacional',
-                    'route' =>  'admin.resumenoperacional',
-                    'can'   =>  'admin.resumenoperacional',
-                    'icon'  =>  'fas fa-fw fa-users-cog'
+                    'text' => 'Resumen Operacional',
+                    'route' => 'admin.resumenoperacional',
+                    'can' => 'admin.resumenoperacional',
+                    'icon' => 'fas fa-fw fa-users-cog'
                 ],
             ]
         ],
         [
-            'text'    => 'Generador Docs',
-            'icon'    => 'fas fa-fw fa-cogs',
+            'text' => 'Generador Docs',
+            'icon' => 'fas fa-fw fa-cogs',
             'submenu' => [
                 [
                     'text' => 'Informes',
-                    'route'  => 'admin.citesinformes',
-                    'can'   =>  'admin.generador.informe',
+                    'route' => 'admin.citesinformes',
+                    'can' => 'admin.generador.informe',
                     'icon' => 'fas fa-fw fa-file-pdf'
                 ],
                 [
                     'text' => 'Memorandum',
-                    'route'  => 'admin.citesmemorandum',
-                    'can'   =>  'admin.generador.memorandum',
+                    'route' => 'admin.citesmemorandum',
+                    'can' => 'admin.generador.memorandum',
                     'icon' => 'fas fa-fw fa-file-pdf'
                 ],
                 [
                     'text' => 'Cobros',
-                    'route'  => 'admin.citescobro',
-                    'can'   =>  'admin.generador.cobro',
+                    'route' => 'admin.citescobro',
+                    'can' => 'admin.generador.cobro',
                     'icon' => 'fas fa-fw fa-file-pdf'
                 ],
                 [
                     'text' => 'Recibo',
-                    'route'  => 'admin.citesrecibo',
-                    'can'   =>  'admin.generador.recibo',
+                    'route' => 'admin.citesrecibo',
+                    'can' => 'admin.generador.recibo',
                     'icon' => 'fas fa-fw fa-file-pdf'
                 ],
                 [
                     'text' => 'Cotizaciones',
-                    'route'  => 'admin.citescotizacion',
-                    'can'   =>  'admin.generador.cotizacion',
+                    'route' => 'admin.citescotizacion',
+                    'can' => 'admin.generador.cotizacion',
                     'icon' => 'fas fa-fw fa-file-pdf'
                 ],
             ],
         ],
         [
             'text' => 'Clientes',
-            'url'  => 'admin/clientes',
-            'can'   =>  'clientes.index',
+            'url' => 'admin/clientes',
+            'can' => 'clientes.index',
             'icon' => 'fas fa-fw fa-address-book'
         ],
         [
             'text' => 'Propietarios',
-            'url'  => 'admin/listado-propietarios',
-            'can'   =>  'propietarios.index',
+            'url' => 'admin/listado-propietarios',
+            'can' => 'propietarios.index',
             'icon' => 'fas fa-fw fa-user-tag'
         ],
         ['header' => 'Mantenimiento'],
         [
-            'text'    => 'Administración',
-            'icon'    => 'fas fa-fw fa-cog',
+            'text' => 'Administración',
+            'icon' => 'fas fa-fw fa-cog',
             'submenu' => [
                 [
                     'text' => 'Oficinas',
-                    'url'  => 'admin/oficinas',
-                    'can'   =>  'oficinas.index',
+                    'url' => 'admin/oficinas',
+                    'can' => 'oficinas.index',
                     'icon' => 'fas fa-fw fa-list'
                 ],
                 [
                     'text' => 'Cargos',
-                    'route'  => 'rrhhcargos.index',
-                    'can'   =>  'rrhhcargos.index',
+                    'route' => 'rrhhcargos.index',
+                    'can' => 'rrhhcargos.index',
                     'icon' => 'fas fa-user-graduate'
                 ],
                 [
                     'text' => 'Feriados',
-                    'route'  => 'feriados',
-                    'can'   =>  'rrhhferiados.index',
+                    'route' => 'feriados',
+                    'can' => 'rrhhferiados.index',
                     'icon' => 'fas fa-birthday-cake'
                 ],
 
@@ -528,89 +534,89 @@ return [
 
 
         [
-            'text'    => 'Config. Inicial',
-            'icon'    => 'fas fa-fw fa-cog',
+            'text' => 'Config. Inicial',
+            'icon' => 'fas fa-fw fa-cog',
             'submenu' => [
 
                 [
                     'text' => 'Tipo Contratos',
-                    'route'  => 'rrhhtipocontratos.index',
-                    'can'   =>  'rrhhtipocontratos.index',
+                    'route' => 'rrhhtipocontratos.index',
+                    'can' => 'rrhhtipocontratos.index',
                     'icon' => 'fas fa-file-contract'
                 ],
                 [
                     'text' => 'Tipo Permisos',
-                    'route'  => 'rrhhtipopermisos.index',
-                    'can'   =>  'rrhhtipopermisos.index',
+                    'route' => 'rrhhtipopermisos.index',
+                    'can' => 'rrhhtipopermisos.index',
                     'icon' => 'fas fa-folder-plus'
                 ],
                 [
                     'text' => 'Motivo Visita',
-                    'route'  => 'motivos.index',
-                    'can'   =>  'motivos.index',
+                    'route' => 'motivos.index',
+                    'can' => 'motivos.index',
                     'icon' => 'fas fa-glasses'
                 ],
 
 
                 [
                     'text' => 'Tipo Boletas',
-                    'route'  => 'tipoboletas.index',
+                    'route' => 'tipoboletas.index',
                     // 'can'   =>  'tipoboletas.index',
                     'icon' => 'fas fa-ticket-alt'
                 ],
                 [
                     'text' => 'Tipo Bonos',
-                    'route'  => 'rrhhtipobonos.index',
-                    'can'   =>  'rrhhtipobonos.index',
+                    'route' => 'rrhhtipobonos.index',
+                    'can' => 'rrhhtipobonos.index',
                     'icon' => 'fas fa-funnel-dollar'
                 ],
                 [
                     'text' => 'Tipo Descuentos',
-                    'route'  => 'rrhhtipodescuentos.index',
-                    'can'   =>  'rrhhtipodescuentos.index',
+                    'route' => 'rrhhtipodescuentos.index',
+                    'can' => 'rrhhtipodescuentos.index',
                     'icon' => 'fas fa-search-dollar'
                 ],
                 [
                     'text' => 'Estado Dotaciones',
-                    'route'  => 'rrhhestadodotacions.index',
-                    'can'   =>  'rrhhestadodotaciones.index',
+                    'route' => 'rrhhestadodotacions.index',
+                    'can' => 'rrhhestadodotaciones.index',
                     'icon' => 'fas fa-toolbox'
                 ],
                 [
                     'text' => 'Estados Asistencia',
-                    'route'  => 'rrhhestados.index',
-                    'can'   =>  'rrhhestados.index',
+                    'route' => 'rrhhestados.index',
+                    'can' => 'rrhhestados.index',
                     'icon' => 'fas fa-exclamation'
                 ],
                 [
                     'text' => 'Areas Laborales',
-                    'url'  => 'admin/areas',
-                    'can'   =>  'areas.index',
+                    'url' => 'admin/areas',
+                    'can' => 'areas.index',
                     'icon' => 'fas fa-fw fa-warehouse'
                 ],
                 [
                     'text' => 'Parametros Generales',
-                    'route'  => 'sistemaparametros.index',
-                    'can'   =>  'sistemaparametros.index',
+                    'route' => 'sistemaparametros.index',
+                    'can' => 'sistemaparametros.index',
                     'icon' => 'fas fa-fw fa-sliders-h'
                 ],
 
             ],
         ],
         [
-            'text'    => 'Config. Sistema',
-            'icon'    => 'fas fa-fw fa-cog',
+            'text' => 'Config. Sistema',
+            'icon' => 'fas fa-fw fa-cog',
             'submenu' => [
                 [
                     'text' => 'Usuarios Sistema',
-                    'url'  => 'admin/users',
-                    'can'   =>  'users.index',
+                    'url' => 'admin/users',
+                    'can' => 'users.index',
                     'icon' => 'fas fa-fw fa-user-shield'
                 ],
                 [
                     'text' => 'Roles y Permisos',
-                    'url'  => 'admin/roles',
-                    'can'  => 'admin.roles.index',
+                    'url' => 'admin/roles',
+                    'can' => 'admin.roles.index',
                     'icon' => 'fas fa-fw fa-shield-alt',
                 ],
             ]

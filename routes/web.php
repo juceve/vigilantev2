@@ -118,6 +118,7 @@ use App\Http\Livewire\Vigilancia\Vtareas;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\RrhhcontratoController;
 use App\Http\Controllers\TipoboletaController;
+use App\Http\Livewire\Admin\CajaChica;
 use App\Http\Livewire\Admin\ListadoCuestionarios;
 use App\Http\Livewire\Admin\ListadoDesignacionesSupervisores;
 use App\Http\Livewire\Supervisores\Panel;
@@ -197,6 +198,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('supervisores/info-cuestionario/{ejecucion_id}/{inspeccion_id}', InfoCuestionario::class)->name('supervisores.infocuestionario');
     Route::get('supervisores/dias-libres/{inspeccion_id}', \App\Http\Livewire\Supervisores\DiasLibres::class)->name('supervisores.diaslibres');
     Route::get('supervisores/ctrl-rondas/{inspeccion_id}', \App\Http\Livewire\Supervisores\CtrlRondas::class)->name('supervisores.ctrlrondas');
+    Route::get('supervisores/cajachica/', \App\Http\Livewire\Supervisores\Cajachica::class)->name('supervisores.cajachica');
 
 
     Route::get('admin/visitas', Registrosvisita::class)->middleware('can:admin.registros.visitas')->name('admin.visitas');
@@ -269,7 +271,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('admin/ctrl-airbnb', CtrlAllAirbnb::class)->name('admin.ctrlallairbnb');
     Route::get('admin/designaciones/guardias', [DesignacioneController::class, 'designacioneguardia'])->name('admin.designacione-guardias');
     Route::get('admin/designaciones/selEmpleado/{empleado_id}', [DesignacioneController::class, 'seleccionarEmpleado'])->name('admin.selempleado');
-
+    Route::get('admin/caja-chica', CajaChica::class)->name('admin.cajachica');
 
 
     Route::resource('registroguardias', RegistroguardiaController::class)->names('registroguardias');

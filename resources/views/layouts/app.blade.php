@@ -444,6 +444,14 @@
                                 </a>
                             </li>
                         @endif
+                        @if (session('designacion-super'))
+                            <li class="nav-item">
+                                <a class="nav-link material-nav-link" href="{{ route('supervisores.cajachica') }}">
+                                    <i class="fas fa-wallet"></i> &nbsp;
+                                    <span>Caja Chica</span>
+                                </a>
+                            </li>
+                        @endif
 
                         <li class="nav-item">
                             <a href="{{ route('logout') }}" class="nav-link material-nav-link logout-link"
@@ -466,7 +474,7 @@
         @yield('content')
     </main>
 
-    
+
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
