@@ -8,17 +8,27 @@ use App\Models\Cliente;
 use App\Models\Tipoboleta;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class ListadoCuestionarios extends Component
 {
-    public $search = '', $filas = 10;
+    use WithPagination;
+    protected $paginationTheme = "bootstrap";
+
+
+    public $search = '', $filas = 10, $selCliente;
     public $cliente_id, $titulo, $descripcion, $activo = 1, $modalMode = 'Nuevo';
     public $preguntas = [], $pregunta = "", $tipoboleta_id = '', $requerida = 1;
     public $cuestionarioId, $preguntaId, $modePregunta = 'Nuevo';
 
     public function render()
     {
-        $resultados = ChklListaschequeo::all();
+        $resultados = ChklListaschequeo::query()
+        ->when($this->selCliente, function ($query) {
+            $query->where('cliente_id', $this->selCliente);
+        })
+        ->paginate($this->filas);
+
         $clientes = Cliente::where('status', 1)->pluck('nombre', 'id');
         $tipoboletas = Tipoboleta::where('status', 1)->pluck('nombre', 'id');
         return view('livewire.admin.listado-cuestionarios', compact('resultados', 'clientes', 'tipoboletas'))->extends('adminlte::page');
@@ -26,7 +36,7 @@ class ListadoCuestionarios extends Component
 
     public function resetAll()
     {
-        $this->reset(['cliente_id', 'titulo', 'descripcion', 'activo', 'modalMode', 'preguntas', 'pregunta', 'tipoboleta_id', 'requerida','modePregunta']);
+        $this->reset(['cliente_id', 'titulo', 'descripcion', 'activo', 'modalMode', 'preguntas', 'pregunta', 'tipoboleta_id', 'requerida', 'modePregunta']);
     }
 
     public function create()
@@ -101,6 +111,7 @@ class ListadoCuestionarios extends Component
 
     public function store()
     {
+        
         $this->validate([
             'cliente_id' => 'required',
             'titulo' => 'required',
@@ -115,20 +126,42 @@ class ListadoCuestionarios extends Component
 
         DB::beginTransaction();
         try {
-            $cuestionario = ChklListaschequeo::create([
-                'cliente_id' => $this->cliente_id,
-                'titulo' => $this->titulo,
-                'descripcion' => $this->descripcion,
-            ]);
-            foreach ($this->preguntas as $item) {
-                $pregunta = $cuestionario->chklPreguntas()->create([
-                    'descripcion' => $item['pregunta'],
-                    'requerida' => $item['requerida'],
-                ]);
-                if ($item['tipoboleta_id']) {
-                    $pregunta->tipoboleta_id = $item['tipoboleta_id'];
-                    $pregunta->save();
+            if ($this->cliente_id === "0") {
+                $tclientes = Cliente::where('status', 1)->get();
+                foreach ($tclientes as $tcliente) {
+                    $cuestionario = ChklListaschequeo::create([
+                        'cliente_id' => $tcliente->id,
+                        'titulo' => $this->titulo,
+                        'descripcion' => $this->descripcion,
+                    ]);
+                    foreach ($this->preguntas as $item) {
+                        $pregunta = $cuestionario->chklPreguntas()->create([
+                            'descripcion' => $item['pregunta'],
+                            'requerida' => $item['requerida'],
+                        ]);
+                        if ($item['tipoboleta_id']) {
+                            $pregunta->tipoboleta_id = $item['tipoboleta_id'];
+                            $pregunta->save();
+                        }
+                    }
                 }
+            } else {
+                $cuestionario = ChklListaschequeo::create([
+                    'cliente_id' => $this->cliente_id,
+                    'titulo' => $this->titulo,
+                    'descripcion' => $this->descripcion,
+                ]);
+                foreach ($this->preguntas as $item) {
+                    $pregunta = $cuestionario->chklPreguntas()->create([
+                        'descripcion' => $item['pregunta'],
+                        'requerida' => $item['requerida'],
+                    ]);
+                    if ($item['tipoboleta_id']) {
+                        $pregunta->tipoboleta_id = $item['tipoboleta_id'];
+                        $pregunta->save();
+                    }
+                }
+
             }
             DB::commit();
             $this->emit('success', 'Cuestionario creado correctamente');
@@ -188,7 +221,7 @@ class ListadoCuestionarios extends Component
                 if ($item['id']) {
                     $pregunta = ChklPregunta::find($item['id']);
                     $pregunta->descripcion = $item['pregunta'];
-                    $pregunta->tipoboleta_id = $item['tipoboleta_id']? $item['tipoboleta_id']:null;
+                    $pregunta->tipoboleta_id = $item['tipoboleta_id'] ? $item['tipoboleta_id'] : null;
                     $pregunta->requerida = $item['requerida'];
                     $pregunta->save();
                 } else {
@@ -211,5 +244,12 @@ class ListadoCuestionarios extends Component
             DB::rollBack();
             $this->emit('error', 'Error al actualizar el cuestionario');
         }
+    }
+
+    public function updatedSelCliente(){
+        $this->resetPage();
+    }
+    public function updatedFilas(){
+        $this->resetPage();
     }
 }

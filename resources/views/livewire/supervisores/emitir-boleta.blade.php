@@ -1,4 +1,9 @@
 <div style="margin-top: 95px">
+
+    @section('title')
+        Boletas
+    @endsection
+
     <div class="alert alert-secondary" role="alert" style="font-size: 13px;">
         <div class="row">
             <div class="col-2">
@@ -21,7 +26,7 @@
 
     </div>
     <div class="container">
-        
+
         <div class="card">
             <div class="card-header bg-secondary text-white">
                 DATOS

@@ -1,17 +1,17 @@
 <div>
     @section('title')
-        Cuestionarios de Supervisión
+        Checklists
     @endsection
     @section('content_header')
         <div class="container-fluid">
-            <h4>Cuestionarios de Supervisión</h4>
+            <h4>Checklists</h4>
         </div>
     @endsection
 
     <div class="container-fluid">
         <div class="card">
             <div class="card-header bg-info">
-                <span class="card-title">Listado de Cuestionarios</span>
+                <span class="card-title">Checklist Elaborados</span>
                 <div class="float-right">
                     <button class="btn btn-info btn-sm" wire:click="create">Nuevo <i class="fas fa-plus"></i></button>
                 </div>
@@ -23,9 +23,12 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
                             </div>
-                            <input type="text" class="form-control" placeholder="Buscar cuestionario..."
-                                aria-label="Buscar cuestionario" aria-describedby="basic-addon1"
-                                wire:model.debounce.500ms='search'>
+                            <select class="form-control" wire:model="selCliente">
+                                <option value="">Todos los Clientes</option>
+                                  @foreach ($clientes as $id => $nombre)
+                                    <option value="{{ $id }}">{{ $nombre }}</option>
+                                  @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="col-12 col-md-4 col-lg-3 col-xl-2">
@@ -47,7 +50,7 @@
                             <tr>
                                 <th class="text-center">ID</th>
                                 <th>Cliente</th>
-                                <th>Cuestionario</th>
+                                <th>Checklist</th>
                                 <th class="text-center">Estado</th>
                                 <th></th>
                             </tr>
@@ -79,6 +82,9 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="float-right">
+                    {{ $resultados->links() }}
+                </div>
             </div>
 
             <!-- Modal -->
@@ -100,7 +106,7 @@
                         @endswitch
                         text-white">
                             <h5 class="modal-title" id="modalCuestionarioLabel">
-                                {{ $modalMode }} Cuestionario
+                                {{ $modalMode }} Checklist
                             </h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"
                                 wire:click="resetAll">
@@ -117,6 +123,9 @@
                                         <select class="form-control @error('cliente_id') is-invalid @enderror"
                                             id="cliente" wire:model.defer="cliente_id">
                                             <option value="">Seleccione un cliente</option>
+                                            @if ($modalMode==='Nuevo')
+                                                 <option value="0">Todos los Clientes</option>
+                                            @endif                                           
                                             @foreach ($clientes as $id => $nombre)
                                                 <option value="{{ $id }}">{{ $nombre }}</option>
                                             @endforeach
@@ -322,7 +331,7 @@
     <script>
         function store() {
             Swal.fire({
-                title: 'Registrar Cuestionario',
+                title: 'Registrar Checklist',
                 text: "¿Estás seguro de realizar la operación?",
                 icon: 'info',
                 showCancelButton: true,
@@ -339,7 +348,7 @@
 
         function update() {
             Swal.fire({
-                title: 'Actualizar Cuestionario',
+                title: 'Actualizar Checklist',
                 text: "¿Estás seguro de realizar la operación?",
                 icon: 'info',
                 showCancelButton: true,

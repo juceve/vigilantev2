@@ -1,4 +1,8 @@
 <div style="margin-top: 95px">
+    @section('title')
+        Panel de Control
+    @endsection
+
     <div class="alert alert-secondary" role="alert">
         <span class="text-dark" style="margin-left: 1rem"> <i class="fas fa-shield"></i>
             <strong>{{ Auth::user()->name }}</strong></span> <br>
@@ -16,7 +20,7 @@
                         class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4">
 
                         <i class="far fa-clipboard" style="font-size: 30px;"></i> <br>
-                        <small>Supervisión</small>
+                        <small>Checklist</small>
 
                     </a>
                     {{-- <button class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4"
@@ -28,7 +32,8 @@
                     </button> --}}
                 </div>
                 <div class="col-6 col-md-4 d-grid mb-3">
-                    <a href="{{ route('supervisores.listadoboletas', $inspeccionActiva->id) }}" class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4 ">
+                    <a href="{{ route('supervisores.listadoboletas', $inspeccionActiva->id) }}"
+                        class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4 ">
 
                         <i class="fas fa-receipt" style="font-size: 30px;"></i> <br>
                         <small>Boletas</small>
@@ -36,23 +41,24 @@
                     </a>
                 </div>
                 <div class="col-6 col-md-4 d-grid mb-3">
-                    <button class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4 ">
+                    <a href="{{ route('supervisores.ctrlasistencia', $inspeccionActiva->id) }}"
+                        class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4 ">
 
                         <i class="fas fa-user-clock" style="font-size: 30px;"></i> <br>
                         <small>Asistencias</small>
 
-                    </button>
+                    </a>
                 </div>
                 <div class="col-6 col-md-4 d-grid mb-3">
-                    <button class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4 ">
+                    <a href="{{ route('supervisores.ctrlrondas', $inspeccionActiva->id) }}" class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4">
 
                         <i class="fas fa-street-view" style="font-size: 30px;"></i> <br>
                         <small>Rondas</small>
 
-                    </button>
+                    </a>
                 </div>
                 <div class="col-6 col-md-4 d-grid mb-3">
-                    <button class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4 ">
+                    <button class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4 disabled">
 
                         <i class="fas fa-briefcase" style="font-size: 30px;"></i> <br>
                         <small>Caja Chica</small>
@@ -60,12 +66,13 @@
                     </button>
                 </div>
                 <div class="col-6 col-md-4 d-grid mb-3">
-                    <button class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4 ">
+                    <a href="{{ route('supervisores.diaslibres', $inspeccionActiva->id) }}"
+                        class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4">
 
                         <i class="fas fa-calendar-check" style="font-size: 30px;"></i> <br>
                         <small>Diás Libres</small>
 
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

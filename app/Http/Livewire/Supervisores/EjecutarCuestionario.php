@@ -174,7 +174,7 @@ class EjecutarCuestionario extends Component
         try {
             $ejecucion = ChklEjecucione::create([
                 'chkl_listaschequeo_id' => $this->cuestionario->id,
-                'notas' => "",
+                // 'notas' => "",
                 'inspector_id' => $this->inspeccionActiva->designacionsupervisor->empleado_id,
                 'fecha' => Carbon::now(),
                 'notas' => $notas,
@@ -201,10 +201,10 @@ class EjecutarCuestionario extends Component
                                 'fechahora' => date('Y-m-d H:i:s'),
                                 'cliente_id' => $this->inspeccionActiva->cliente_id,
                                 'empleado_id' => $empleado,
-                                'tipoboleta_id' => $respuesta['tipoboleta']['id'],
+                                'tipoboleta_id' => $respuesta['tipoboleta']['id']??NULL,
                                 'supervisor_id' => $this->inspeccionActiva->designacionsupervisor->empleado_id,
                                 'detalles' => 'Emisión por incumplimiento en Cuestionario de Control',
-                                'descuento' => $respuesta['tipoboleta']['monto_descuento'],
+                                'descuento' => $respuesta['tipoboleta']['monto_descuento']??'0',
                             ]);
                             if ($respuesta['tipoboleta']['monto_descuento'] > 0) {
                                 $contrato = traeContratoActivoEmpleadoId($empleadoSel->id);

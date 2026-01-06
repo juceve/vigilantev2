@@ -1,6 +1,11 @@
 <div>
+
+    @section('title')
+        INSPECCIONES
+    @endsection
+
     <div class="table-responsive">
-        
+
         <table class="table table-bordered table-striped">
             <thead>
                 <tr class="bg-success text-white text-center">
@@ -11,18 +16,27 @@
             </thead>
             <tbody>
                 @forelse ($designaciones->designacionsupervisorclientes as $item)
-                
+
                     <tr>
                         <td class="align-middle">
-                            <strong>{{ $item->cliente->nombre }}</strong> <br>
-                            <span style="font-size: 11px;">Última revisión:</span>
-                            <span class="badge rounded-pill text-bg-primary" style="font-size: 9px;">01/01/2025
-                                15:00H</span>
+                            <strong>{{ $item->cliente->nombre }}</strong>
+                            <br>
+                            @php
+                                $ult = ultInspeccion($item->cliente_id);
+                            @endphp
+                            @if ($ult)
+                                <span style="font-size: 11px;">Última revisión:</span>
+                                <span class="badge rounded-pill text-bg-warning" style="font-size: 11px;">
+                                    {{ $ult->fin }}
+                                </span>
+                            @endif
+
                         </td>
                         <td class="align-middle text-end">
                             @if ($inspeccionActiva)
                                 @if ($inspeccionActiva->cliente_id === $item->cliente_id)
-                                    <a href="{{route('supervisores.panel',$inspeccionActiva->id)}}" class="btn btn-info text-white" style="width: 100px">
+                                    <a href="{{route('supervisores.panel', $inspeccionActiva->id)}}" class="btn btn-info text-white"
+                                        style="width: 100px">
                                         <i class="fas fa-arrow-right"></i> <br> Continuar
                                     </a>
                                 @else

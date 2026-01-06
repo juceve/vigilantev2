@@ -12,6 +12,7 @@ use App\Models\Designaciondia;
 use App\Models\Designacione;
 use App\Models\Dialibre;
 use App\Models\Hombrevivo as ModelsHombrevivo;
+use App\Models\Inspeccion;
 use App\Models\Intervalo;
 use App\Models\Marcacione;
 use App\Models\Regronda;
@@ -730,7 +731,7 @@ function traeContratoActivoEmpleadoId($empleado_id)
         })
         ->first();
 
-        return $contrato;
+    return $contrato;
 }
 
 function numeroALetras($numero, $convertirDecimalALetras = false)
@@ -769,21 +770,28 @@ function numeroALetras($numero, $convertirDecimalALetras = false)
             'NOVECIENTOS'
         ];
 
-        if ($num == 0) return 'CERO';
-        if ($num < 10) return $unidades[$num];
-        if ($num >= 11 && $num <= 19) return $especiales[$num];
+        if ($num == 0)
+            return 'CERO';
+        if ($num < 10)
+            return $unidades[$num];
+        if ($num >= 11 && $num <= 19)
+            return $especiales[$num];
         if ($num < 100) {
             $d = intval($num / 10);
             $r = $num % 10;
             if ($r > 0) {
-                if ($d == 2) return 'VEINTI' . $unidades[$r];
-                else return $decenas[$d] . ' Y ' . $unidades[$r];
-            } else return $decenas[$d];
+                if ($d == 2)
+                    return 'VEINTI' . $unidades[$r];
+                else
+                    return $decenas[$d] . ' Y ' . $unidades[$r];
+            } else
+                return $decenas[$d];
         }
         if ($num < 1000) {
             $c = intval($num / 100);
             $r = $num % 100;
-            if ($c == 1 && $r == 0) return 'CIEN';
+            if ($c == 1 && $r == 0)
+                return 'CIEN';
             return $centenas[$c] . ($r > 0 ? ' ' . $convertir($r) : '');
         }
         if ($num < 1000000) {
@@ -823,4 +831,13 @@ function numeroALetras($numero, $convertirDecimalALetras = false)
     }
 
     return $enteroTexto . $decimalTexto;
+}
+
+function ultInspeccion($cliente_id)
+{
+    $inspeccion = Inspeccion::where('cliente_id', $cliente_id)
+        ->orderBy('id', 'desc')
+        ->first();
+
+        return $inspeccion;
 }

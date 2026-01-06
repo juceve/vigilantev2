@@ -89,7 +89,7 @@
                             <td class="text-left">
                                 <b>{{ $desig->empleado->nombres . ' ' . $desig->empleado->apellidos }}</b><br>
                                 <small class="text-success"><strong>Empresa:
-                                    {{ $desig->turno->cliente->nombre ?? 'Sin empresa' }}</strong></small> <br>
+                                        {{ $desig->turno->cliente->nombre ?? 'Sin empresa' }}</strong></small> <br>
                                 @php
                                     $dl = $desig->designaciondias;
                                 @endphp
@@ -109,7 +109,7 @@
 
 
 
-                                
+
                             </td>
 
                             @foreach ($dias as $dia)

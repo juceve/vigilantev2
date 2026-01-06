@@ -1,4 +1,8 @@
 <div style="margin-top: 95px">
+    @section('title')
+        Datos Checklist
+    @endsection
+
     <div class="alert alert-primary" role="alert" style="font-size: 16px;">
         <div class="row">
             <div class="col-2">
@@ -86,7 +90,7 @@
                 </div>
                 @if (!is_null($cuestionarioEjecutado->notas))
                     <div class="alert alert-warning" role="alert">
-                        <strong>Notas del Cuestionario:</strong> {{ $cuestionarioEjecutado->notas }}
+                        <strong>Notas del Checklist:</strong> {{ $cuestionarioEjecutado->notas }}
                     </div>
                 @endif
             </div>

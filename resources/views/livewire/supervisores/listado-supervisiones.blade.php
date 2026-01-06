@@ -1,4 +1,8 @@
 <div style="margin-top: 95px">
+    @section('title')
+        Checklists
+    @endsection
+
     <div class="alert alert-secondary" role="alert" style="font-size: 12px;">
         <div class="row">
             <div class="col-2">
@@ -17,11 +21,11 @@
 
     </div>
     <div class="container d-grid">
-        <button class="btn btn-primary mb-3" wire:click='iniciarCuestionario'>INICIAR CUESTIONARIO <i
+        <button class="btn btn-primary mb-3" wire:click='iniciarCuestionario'>INICIAR CHECKLIST <i
                 class="fas fa-clipboard"></i></button>
         <div class="card">
             <div class="card-header bg-secondary text-white text-center">
-                CUESTIONARIOS EJECUTADOS
+                CHECKLIST EJECUTADOS
             </div>
             <div class="card-body">
                 <div class="input-group input-group-sm mb-3">
@@ -36,7 +40,7 @@
                         <thead>
                             <tr class="table-info">
                                 <th>FECHA</th>
-                                <th>CUESTIONARIO</th>
+                                <th>CHECKLIST</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -76,8 +80,8 @@
 
             Swal.fire({
                 icon: 'info',
-                title: 'Selecciona un cuestionario',
-                text: 'Debes elegir un cuestionario para continuar',
+                title: 'Selecciona un checklist',
+                text: 'Debes elegir un checklist para continuar',
                 input: 'select',
                 inputOptions: opciones,
                 inputPlaceholder: 'Elige una opción...',
@@ -87,7 +91,7 @@
                 inputValidator: value => {
                     return new Promise((resolve) => {
                         if (value) resolve();
-                        else resolve('Debes seleccionar un cuestionario');
+                        else resolve('Debes seleccionar un checklist');
                     });
                 }
             }).then(result => {

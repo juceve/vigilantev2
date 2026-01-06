@@ -1,4 +1,9 @@
 <div style="margin-top: 95px">
+
+    @section('title')
+        Boletas
+    @endsection
+
     <div class="alert alert-secondary" role="alert" style="font-size: 12px;">
         <div class="row">
             <div class="col-2">

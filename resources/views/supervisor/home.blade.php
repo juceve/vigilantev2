@@ -31,8 +31,16 @@
     </div>
 
     <div class="container">
-        
-        @livewire('supervisores.inspecciones', ['designacion_id' => $designaciones->id])
+        {{-- @dump($designaciones) --}}
+        @if ($designaciones)
+            @livewire('supervisores.inspecciones', ['designacion_id' => $designaciones->id])
+        @else
+            <div class="alert alert-warning text-center" role="alert">
+                NO CUENTA CON UNA DESIGNACION ACTIVA <br>
+                <small><strong>Por favor contacte al Administrador</strong></small>
+            </div>
+        @endif
+
     </div>
 
     {{-- Estilos Material Design --}}
@@ -43,7 +51,7 @@
     {{-- JavaScript Optimizado Material Design --}}
     @push('scripts')
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 // Auto-refresh optimizado con visibilidad de página
                 let refreshInterval;
 
@@ -60,7 +68,7 @@
                 }
 
                 // Manejar cambios de visibilidad de la página - passive
-                document.addEventListener('visibilitychange', function() {
+                document.addEventListener('visibilitychange', function () {
                     if (document.hidden) {
                         // Página oculta, pausar el refresh
                         clearTimeout(refreshInterval);
@@ -77,14 +85,14 @@
 
                 functionCards.forEach(card => {
                     // Efecto de tap en móvil - passive para mejor rendimiento
-                    card.addEventListener('touchstart', function() {
+                    card.addEventListener('touchstart', function () {
                         this.style.transform = 'scale(0.95)';
                     }, {
                         passive: true
                     });
 
                     // Touch end para efecto visual - passive
-                    card.addEventListener('touchend', function() {
+                    card.addEventListener('touchend', function () {
                         this.style.transform = '';
                     }, {
                         passive: true
@@ -92,7 +100,7 @@
 
                     // Separar la lógica de prevención de zoom doble tap
                     let touchTime = 0;
-                    card.addEventListener('touchstart', function(event) {
+                    card.addEventListener('touchstart', function (event) {
                         // Solo prevenir zoom si hay múltiples toques rápidos
                         if (event.touches.length > 1) return;
 
@@ -135,14 +143,14 @@
                 startAutoRefresh();
 
                 // Manejar errores de red para reintentar después - passive
-                window.addEventListener('offline', function() {
+                window.addEventListener('offline', function () {
                     clearTimeout(refreshInterval);
                     console.log('Aplicación sin conexión - pausando auto-refresh');
                 }, {
                     passive: true
                 });
 
-                window.addEventListener('online', function() {
+                window.addEventListener('online', function () {
                     startAutoRefresh();
                     console.log('Conexión restaurada - reanudando auto-refresh');
                 }, {
@@ -152,7 +160,7 @@
                 // Mejora de accesibilidad - keydown requiere preventDefault así que NO passive
                 const cards = document.querySelectorAll('.card-link');
                 cards.forEach(card => {
-                    card.addEventListener('keydown', function(e) {
+                    card.addEventListener('keydown', function (e) {
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
                             this.click();

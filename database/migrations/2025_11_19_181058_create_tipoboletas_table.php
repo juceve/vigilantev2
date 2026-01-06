@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('tipoboletas', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->unique();
-            $table->string('descripcion')->nullable();            
+            $table->string('nombre');
+            $table->string('descripcion')->nullable();
             $table->foreignId('rrhhtipodescuento_id')->nullable()->constrained()->nullOnDelete();
             $table->decimal('monto_descuento', 8, 2)->nullable()->default(0);
             $table->boolean('status')->default(true);

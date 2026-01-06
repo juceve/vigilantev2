@@ -10,6 +10,7 @@ use App\Http\Controllers\CitereciboController;
 use App\Http\Controllers\CldotacionController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\DesignacioneController;
+use App\Http\Controllers\DialibreController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\FormularioAirbnbController;
 use App\Http\Controllers\HomeController;
@@ -191,8 +192,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('supervisores/ejecutar-cuestionario/{cuestionario_id}/{inspeccion_id}', App\Http\Livewire\Supervisores\EjecutarCuestionario::class)->name('supervisores.ejecutarcuestionario');
     Route::get('supervisores/listado-supervisiones/{inspeccion_id}', App\Http\Livewire\Supervisores\ListadoSupervisiones::class)->name('supervisores.listadosupervisiones');
     Route::get('supervisores/listado-boletas/{inspeccion_id}', App\Http\Livewire\Supervisores\ListadoBoletas::class)->name('supervisores.listadoboletas');
+    Route::get('supervisores/ctrl-asistencia/{inspeccion_id}', App\Http\Livewire\Supervisores\CtrlAsistencia::class)->name('supervisores.ctrlasistencia');
     Route::get('supervisores/emitir-boleta/{inspeccion_id}', App\Http\Livewire\Supervisores\EmitirBoleta::class)->name('supervisores.emitirboleta');
     Route::get('supervisores/info-cuestionario/{ejecucion_id}/{inspeccion_id}', InfoCuestionario::class)->name('supervisores.infocuestionario');
+    Route::get('supervisores/dias-libres/{inspeccion_id}', \App\Http\Livewire\Supervisores\DiasLibres::class)->name('supervisores.diaslibres');
+    Route::get('supervisores/ctrl-rondas/{inspeccion_id}', \App\Http\Livewire\Supervisores\CtrlRondas::class)->name('supervisores.ctrlrondas');
 
 
     Route::get('admin/visitas', Registrosvisita::class)->middleware('can:admin.registros.visitas')->name('admin.visitas');

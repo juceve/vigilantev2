@@ -344,7 +344,7 @@ return [
                     // 'can'   =>  'designaciones.index',
                 ],
                  [
-                    'text' => 'Cuestionarios Diarios',
+                    'text' => 'Elaboración de Checklist',
                     'route' =>  'admin.listadocuestionarios',
                     'icon'  =>  'fas fa-clipboard',
                     // 'can'   =>  'designaciones.index',
