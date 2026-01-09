@@ -147,8 +147,8 @@
 
 
                             <div class="mb-3" id="comprobanteInput">
-                                <label class="form-label">Comprobante (foto o PDF)</label>
-                                <input type="file" accept="image/*,.pdf" class="form-control" wire:ignore>
+                                <label class="form-label">Comprobante (foto)</label>
+                                <input type="file" accept="image/*" class="form-control" wire:ignore>
 
                             </div>
 
@@ -627,9 +627,10 @@
                 btn.innerHTML = '<i class="fas fa-save"></i> Registrar';
             } else {
                 btn.disabled = true;
-                btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Registro';
+                btn.innerHTML = '<i class="fas fa-save"></i> Registrar'; // quitar spinner
             }
         }
+
 
 
         document.addEventListener('DOMContentLoaded', () => {
