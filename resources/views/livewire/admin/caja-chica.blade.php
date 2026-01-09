@@ -68,22 +68,25 @@
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
                     <thead class="thead">
-                        <tr class="table-info">
+                        <tr class="table-info text-center">
                             <th>ID</th>
-                            <th>SUPERVISOR</th>
+                            <th class="text-left">SUPERVISOR</th>
                             <th>GESTIÓN</th>
+                            <th class="text-right">SALDO Bs.</th>
                             <th>ESTADO</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($cajachicas as $cajachica)
-                            <tr>
+                            <tr class="text-center">
                                 <td class="align-middle">{{ $cajachica->id }}</td>
 
-                                <td class="align-middle">
+                                <td class="align-middle text-left">
                                     {{ $cajachica->empleado->nombres . ' ' . $cajachica->empleado->apellidos }}</td>
                                 <td class="align-middle">{{ $cajachica->gestion }}</td>
+                                <td class="align-middle text-right"> {{ number_format($cajachica->saldo_actual, 2) }}
+                                </td>
                                 <td class="align-middle">
                                     @if ($cajachica->estado === 'ACTIVA')
                                         <span class="badge badge-pill badge-success">{{ $cajachica->estado }}</span>
@@ -430,9 +433,9 @@
                         </div>
 
                         {{-- Tabla de movimientos --}}
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                             <table class="table table-bordered table-sm">
-                                <thead class="thead-light">
+                                <thead class="table-secondary">
                                     <tr>
                                         <th>Fecha</th>
                                         <th>Tipo</th>
@@ -455,7 +458,7 @@
                                             <td>{{ $mov->concepto }}</td>
                                             <td>{{ $mov->categoria ?? '-' }}</td>
                                             <td class="text-right">
-                                                {{ number_format($mov->monto, 2) }}
+                                                {{ $mov->tipo === 'INGRESO' ? '' : '-' }}{{ number_format($mov->monto, 2) }}
                                             </td>
                                         </tr>
                                     @empty
@@ -466,6 +469,12 @@
                                         </tr>
                                     @endforelse
                                 </tbody>
+                                <tfoot>
+                                    <tr class="table-secondary">
+                                        <td colspan="4" class="text-right"><strong>Saldo Bs.</strong></td>
+                                        <td class="text-right"><strong>{{ number_format($cajachica->saldo_actual, 2) }}</strong></td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     @endif

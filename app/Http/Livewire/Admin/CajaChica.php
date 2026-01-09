@@ -138,6 +138,14 @@ class CajaChica extends Component
         if ($this->procesando) {
             return;
         }
+
+        if ($this->selEstado == 'CERRADA') {
+            if ($this->selCaja->saldo_actual > 0) {
+                $this->emit('error', 'Existe un monto de saldo, debe estar en 0 para cerrar la caja.');
+                return;
+            }
+        }
+
         $this->procesando = true;
         DB::beginTransaction();
         try {
@@ -223,8 +231,8 @@ class CajaChica extends Component
     }
 
     public $totalIngresos = 0;
-public $totalEgresos = 0;
-public $saldoPeriodo = 0;
+    public $totalEgresos = 0;
+    public $saldoPeriodo = 0;
 
     public function verMovimientos($cajaId)
     {
@@ -238,26 +246,27 @@ public $saldoPeriodo = 0;
         $this->emit('abrirModalMovimientos');
     }
 
-    public function cerrarMovimientos(){
+    public function cerrarMovimientos()
+    {
         $this->emit('cerrarModalMovimientos');
-        $this->reset(['filtroGestion','filtroMes']);
+        $this->reset(['filtroGestion', 'filtroMes']);
     }
 
-   public function cargarMovimientos()
-{
-    $query = $this->selCaja->movimientocajas()
-        ->whereYear('fecha', $this->filtroGestion);
+    public function cargarMovimientos()
+    {
+        $query = $this->selCaja->movimientocajas()
+            ->whereYear('fecha', $this->filtroGestion);
 
-    if ($this->filtroMes) {
-        $query->whereMonth('fecha', $this->filtroMes);
+        if ($this->filtroMes) {
+            $query->whereMonth('fecha', $this->filtroMes);
+        }
+
+        $this->movimientos = $query->orderBy('fecha')->get();
+
+        $this->totalIngresos = $query->where('tipo', 'INGRESO')->sum('monto');
+        $this->totalEgresos = $query->where('tipo', 'EGRESO')->sum('monto');
+        $this->saldoPeriodo = $this->totalIngresos - $this->totalEgresos;
     }
-
-    $this->movimientos = $query->orderBy('fecha')->get();
-
-    $this->totalIngresos = $query->where('tipo', 'INGRESO')->sum('monto');
-    $this->totalEgresos  = $query->where('tipo', 'EGRESO')->sum('monto');
-    $this->saldoPeriodo  = $this->totalIngresos - $this->totalEgresos;
-}
 
 
 

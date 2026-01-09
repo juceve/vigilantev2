@@ -70,4 +70,30 @@ class Cajachica extends Model
             ")
             ->value('saldo') ?? 0;
     }
+
+    public function totalIngresos()
+    {
+        return $this->movimientocajas()
+            ->where('tipo', 'INGRESO')
+            ->sum('monto');
+    }
+
+    public function totalEgresos()
+    {
+        return $this->movimientocajas()
+            ->where('tipo', 'EGRESO')
+            ->sum('monto');
+    }
+
+    public function egresosDelMes($mes = null)
+    {
+        $mes = $mes ?? now()->month;
+
+        return $this->movimientocajas()
+            ->where('tipo', 'EGRESO')
+            ->whereMonth('fecha', $mes)
+            ->whereYear('fecha', $this->gestion)
+            ->sum('monto');
+    }
+
 }
