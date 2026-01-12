@@ -33,6 +33,8 @@ class Cajachica extends Component
     }
     public function render()
     {
+        if ($this->cajachica) {
+
         $anioActual = Carbon::now()->year;
 
         $aniosBD = ModelsCajachica::selectRaw('gestion as anio')
@@ -58,6 +60,10 @@ class Cajachica extends Component
             ->get();
 
         return view('livewire.supervisores.cajachica', compact('movimientos', 'gestiones'))->extends('layouts.app');
+        } else {
+            return view('livewire.supervisores.cajachica')->extends('layouts.app');
+        }
+
     }
 
 

@@ -57,14 +57,7 @@
 
                     </a>
                 </div>
-                <div class="col-6 col-md-4 d-grid mb-3">
-                    <button class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4 disabled">
 
-                        <i class="fas fa-briefcase" style="font-size: 30px;"></i> <br>
-                        <small>Caja Chica</small>
-
-                    </button>
-                </div>
                 <div class="col-6 col-md-4 d-grid mb-3">
                     <a href="{{ route('supervisores.diaslibres', $inspeccionActiva->id) }}"
                         class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4">
@@ -73,6 +66,14 @@
                         <small>Diás Libres</small>
 
                     </a>
+                </div>
+                <div class="col-6 col-md-4 d-grid mb-3">
+                    <button class="btn btn-outline-secondary shadow bg-body-tertiary rounded py-4 disabled">
+
+                        {{-- <i class="fas fa-briefcase" style="font-size: 30px;"></i> <br>
+                        <small>Caja Chica</small> --}}
+
+                    </button>
                 </div>
             </div>
         </div>
