@@ -104,7 +104,9 @@
                                         wire:click="edit({{ $cajachica->id }})">
                                         <i class="fas fa-edit"></i>
                                     </button>
+
                                     <button class="btn btn-sm btn-success" title="Depositos"
+                                        @if ($cajachica->estado === 'CERRADA') disabled readonly @endif
                                         wire:click="depositar({{ $cajachica->id }})">
                                         <i class="fas fa-money-bill-wave"></i>
                                     </button>
@@ -472,7 +474,8 @@
                                 <tfoot>
                                     <tr class="table-secondary">
                                         <td colspan="4" class="text-right"><strong>Saldo Bs.</strong></td>
-                                        <td class="text-right"><strong>{{ number_format($cajachica->saldo_actual, 2) }}</strong></td>
+                                        <td class="text-right">
+                                            <strong>{{ number_format($cajachica->saldo_actual, 2) }}</strong></td>
                                     </tr>
                                 </tfoot>
                             </table>

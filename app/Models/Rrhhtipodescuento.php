@@ -20,10 +20,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Rrhhtipodescuento extends Model
 {
-    
+
     static $rules = [
 		'nombre' => 'required',
-		'nombre_corto' => 'required',
+		'nombre_corto' => 'required|max:10',
 		'monto' => 'required',
     ];
 
@@ -44,6 +44,6 @@ class Rrhhtipodescuento extends Model
     {
         return $this->hasMany('App\Models\Rrhhdescuento', 'rrhhtipodescuento_id', 'id');
     }
-    
+
 
 }
