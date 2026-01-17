@@ -193,6 +193,11 @@ class CajaChica extends Component
 
     public function registrarDeposito()
     {
+        if ($this->selCaja->estado == 'CERRADA') {
+            $this->emit('error', 'La Caja se encuentra cerrada.');
+            return;
+        }
+
         $this->validate([
             'montoDeposito' => 'required|numeric|min:0.01',
             'conceptoDeposito' => 'required|string|min:3',

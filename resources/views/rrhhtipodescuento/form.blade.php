@@ -8,7 +8,7 @@
         </div>
         <div class="form-group">
             {{ Form::label('nombre_corto') }}
-            {{ Form::text('nombre_corto', $rrhhtipodescuento->nombre_corto, ['class' => 'form-control' . ($errors->has('nombre_corto') ? ' is-invalid' : ''), 'placeholder' => 'Nombre Corto']) }}
+            {{ Form::text('nombre_corto', $rrhhtipodescuento->nombre_corto, ['class' => 'form-control' . ($errors->has('nombre_corto') ? ' is-invalid' : ''), 'placeholder' => 'Nombre Corto', 'maxlength' => '10']) }}
             {!! $errors->first('nombre_corto', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
