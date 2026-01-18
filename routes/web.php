@@ -124,6 +124,7 @@ use App\Http\Livewire\Admin\ListadoDesignacionesSupervisores;
 use App\Http\Livewire\Supervisores\Panel;
 use App\Http\Livewire\Vigilancia\Adelantos;
 use App\Http\Livewire\Vigilancia\Asistencias;
+use App\Http\Livewire\Vigilancia\Boletas;
 use App\Models\Empleado;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -188,6 +189,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('vigilancia/vacaciones', Vacaciones::class)->name('vigilancia.vacaciones');
     Route::get('vigilancia/adelantos', Adelantos::class)->name('vigilancia.adelantos');
     Route::get('vigilancia/asistencias', Asistencias::class)->name('vigilancia.asistencias');
+    Route::get('vigilancia/boletas', Boletas::class)->name('vigilancia.boletas');
 
     Route::get('supervisores/panel/{inspeccion_id}', Panel::class)->name('supervisores.panel');
     Route::get('supervisores/ejecutar-cuestionario/{cuestionario_id}/{inspeccion_id}', App\Http\Livewire\Supervisores\EjecutarCuestionario::class)->name('supervisores.ejecutarcuestionario');

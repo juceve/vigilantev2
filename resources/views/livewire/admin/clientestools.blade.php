@@ -261,19 +261,48 @@
                                                     </td>
                                                     <td class="text-center align-middle">
                                                         @php
-                                                            $hoy = date('Y-m-d');
+                                                            $hoy = \Carbon\Carbon::today();
 
-                                                            // Contar hombrevivos de hoy para este empleado
-                                                            $hvs = \App\Models\Hombrevivo::whereHas('intervalo', function($q) use ($item) {
-                                                                $q->where('designacione_id', $item->id);
-                                                            })
-                                                            ->where('fecha', $hoy)
-                                                            ->where('status', true)
-                                                            ->count();
+                                                            // Lógica compacta igual a ListadoHv::generarReporte
+                                                            $turnoInicio = $item->datosturno->horainicio ?? null;
+                                                            $turnoFin = $item->datosturno->horafin ?? null;
 
-                                                            // Contar intervalos totales de esta designación
-                                                            $intervalos = \App\Models\Intervalo::where('designacione_id', $item->id)
-                                                                ->count();
+                                                            // obtener ids de intervalos asignados a la designación
+                                                            $intervalosIds = $item->intervalos ? $item->intervalos->pluck('id')->toArray() : [];
+                                                            $intervalos = count($intervalosIds);
+
+                                                            if (!$turnoInicio || !$turnoFin) {
+                                                                $hvs = \App\Models\Hombrevivo::whereIn('intervalo_id', $intervalosIds)
+                                                                    ->whereDate('fecha', $hoy->format('Y-m-d'))
+                                                                    ->where('status', true)
+                                                                    ->count();
+                                                            } else {
+                                                                $horainicio = \Carbon\Carbon::parse($turnoInicio)->subMinutes(15)->format('H:i:s');
+                                                                $horafin = \Carbon\Carbon::parse($turnoFin)->addMinutes(30)->format('H:i:s');
+
+                                                                if (\Carbon\Carbon::parse($turnoInicio)->gt(\Carbon\Carbon::parse($turnoFin))) {
+                                                                    // nocturno: registros del dia actual >= horainicio OR del dia siguiente <= horafin
+                                                                    $fechaBase = $hoy->copy();
+                                                                    $hvs = \App\Models\Hombrevivo::whereIn('intervalo_id', $intervalosIds)
+                                                                        ->where(function ($q) use ($hoy, $horainicio, $horafin, $fechaBase) {
+                                                                            $q->where(function ($q1) use ($hoy, $horainicio) {
+                                                                                $q1->whereDate('fecha', $hoy->format('Y-m-d'))
+                                                                                    ->where('hora', '>=', $horainicio);
+                                                                            })
+                                                                            ->orWhere(function ($q2) use ($fechaBase, $horafin) {
+                                                                                $q2->whereDate('fecha', $fechaBase->copy()->addDay()->format('Y-m-d'))
+                                                                                    ->where('hora', '<=', $horafin);
+                                                                            });
+                                                                        })->where('status', true)->count();
+                                                                } else {
+                                                                    // diurno: misma fecha entre rangos
+                                                                    $hvs = \App\Models\Hombrevivo::whereDate('fecha', $hoy->format('Y-m-d'))
+                                                                        ->whereIn('intervalo_id', $intervalosIds)
+                                                                        ->whereBetween('hora', [$horainicio, $horafin])
+                                                                        ->where('status', true)
+                                                                        ->count();
+                                                                }
+                                                            }
                                                         @endphp
 
 
@@ -282,15 +311,19 @@
                                                                 // Calcular porcentaje
                                                                 $porcentaje = round(($hvs / $intervalos) * 100);
 
-                                                                // Determinar color del badge
-                                                                if ($porcentaje >= 90) {
+                                                                // Determinar color del badge según la leyenda:
+                                                                // 100% -> success
+                                                                // 50-99% -> warning
+                                                                // 1-49% -> secondary
+                                                                // 0% -> danger
+                                                                if ($porcentaje == 100) {
                                                                     $badgeColor = 'success';
-                                                                } elseif ($porcentaje >= 70) {
+                                                                } elseif ($porcentaje >= 50) {
                                                                     $badgeColor = 'warning';
                                                                 } elseif ($porcentaje > 0) {
-                                                                    $badgeColor = 'danger';
-                                                                } else {
                                                                     $badgeColor = 'secondary';
+                                                                } else {
+                                                                    $badgeColor = 'danger';
                                                                 }
                                                             @endphp
 

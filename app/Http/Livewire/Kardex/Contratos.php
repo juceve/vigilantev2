@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Kardex;
 
+use App\Models\Designaciondia;
+use App\Models\Designacione;
 use App\Models\Empleado;
 use App\Models\Rrhhcargo;
 use App\Models\Rrhhcontrato;
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use PhpParser\Node\Expr\FuncCall;
 
 class Contratos extends Component
 {
@@ -39,7 +42,7 @@ class Contratos extends Component
         return view('livewire.kardex.contratos', compact('contratos', 'tipocontratos', 'cargos'));
     }
 
-    protected $listeners = ['registrarDoc'];
+    protected $listeners = ['registrarDoc', 'eliminarContrato'];
 
     protected $rules = [
         'rrhhtipocontratoid' => 'required',
@@ -84,7 +87,7 @@ class Contratos extends Component
     public function verInfo($contrato_id)
     {
         $this->designacione = traerDesignacionContrato($contrato_id);
-        
+
         Session::put('designacione_data', $this->designacione);
         $this->show = true;
         $this->editContrato($contrato_id);
@@ -92,9 +95,10 @@ class Contratos extends Component
 
     public function editContrato($contrato_id)
     {
+        $this->designacione = traerDesignacionContrato($contrato_id);
         $this->selContrato = Rrhhcontrato::find($contrato_id);
         Session::put('contrato_data', $this->selContrato);
-        
+
         $this->rrhhtipocontratoid = $this->selContrato->rrhhtipocontrato_id;
         $this->fecha_inicio = $this->selContrato->fecha_inicio;
         $this->fecha_fin = $this->selContrato->fecha_fin;
@@ -135,6 +139,21 @@ class Contratos extends Component
                 $this->selContrato->activo = $this->activo;
                 $this->selContrato->motivo_fin = $this->motivo_fin ? $this->motivo_fin : NULL;
                 $this->selContrato->save();
+
+
+
+                if ($this->activo == 0) {
+                    $designacionesActivas = traerDesignacionContrato($this->selContrato->id);
+                    foreach ($designacionesActivas as $designacion) {
+                        $designacion->estado = false;
+                        $designacion->save();
+                    }
+
+                    if ($this->selContrato->empleado->user) {
+                        $this->selContrato->empleado->user->update(['status' => 0]);
+                    }
+                }
+
                 DB::commit();
                 $this->limpiar();
                 $this->empleado->refresh();
@@ -197,5 +216,24 @@ class Contratos extends Component
         $tipocontrato = Rrhhtipocontrato::find($this->rrhhtipocontratoid);
         $this->salario_basico = $tipocontrato->sueldo_referencial;
         $this->cantidad_dias = $tipocontrato->cantidad_dias;
+    }
+
+    public function eliminarContrato($contrato_id)
+    {
+
+        DB::beginTransaction();
+        try {
+            $contrato = Rrhhcontrato::find($contrato_id);
+
+            if ($contrato) {
+                $contrato->delete();
+            }
+
+            DB::commit();
+            $this->emit('success', 'Contrato eliminado correctamente.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $this->emit('error', $th->getMessage());
+        }
     }
 }

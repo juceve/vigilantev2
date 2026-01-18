@@ -11,6 +11,7 @@ use Livewire\Component;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\HombreVivoExport;
+use Carbon\CarbonPeriod;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ListadoHv extends Component
@@ -62,22 +63,6 @@ class ListadoHv extends Component
         $this->resultados = [];
         $this->mostrarResultados = true;
 
-        $query = Hombrevivo::join('intervalos', 'hombrevivos.intervalo_id', '=', 'intervalos.id')
-            ->join('designaciones', 'intervalos.designacione_id', '=', 'designaciones.id')
-            ->join('turnos', 'designaciones.turno_id', '=', 'turnos.id')
-            ->whereBetween('hombrevivos.fecha', [$this->fecha_inicio, $this->fecha_fin])
-            ->where('hombrevivos.status', true);
-
-        if ($this->cliente_id) {
-            $query->where('turnos.cliente_id', $this->cliente_id);
-        }
-
-        if ($this->empleado_id) {
-            $query->where('designaciones.empleado_id', $this->empleado_id);
-        }
-
-        $marcaciones = $query->select('hombrevivos.*', 'designaciones.empleado_id')->get();
-
         $fechaInicio = Carbon::parse($this->fecha_inicio);
         $fechaFin = Carbon::parse($this->fecha_fin);
 
@@ -99,55 +84,75 @@ class ListadoHv extends Component
             $empleadosIds = collect([$this->empleado_id]);
         }
 
+
+        $resultados = array();
         foreach ($empleadosIds as $empId) {
-            $empleado = Empleado::find($empId);
-            if (!$empleado) continue;
-
-            $datosEmpleado = [
-                'empleado_id' => $empId,
-                'empleado_nombre' => $empleado->nombres . ' ' . $empleado->apellidos,
-                'total_marcaciones' => 0,
-                'dias' => []
-            ];
-
-            $fechaActual = $fechaInicio->copy();
-            $tieneDatos = false;
-
-            while ($fechaActual <= $fechaFin) {
-                $fechaStr = $fechaActual->format('Y-m-d');
-
-                $cantidadDia = $marcaciones->where('empleado_id', $empId)
-                    ->where('fecha', $fechaStr)
-                    ->count();
-
-                $intervalosEsperados = Intervalo::whereHas('designacione', function ($q) use ($empId, $fechaStr) {
-                    $q->where('empleado_id', $empId)
-                        ->where('fechaInicio', '<=', $fechaStr)
-                        ->where('fechaFin', '>=', $fechaStr)
-                        ->where('estado', true);
-                })->count();
-
-                if ($intervalosEsperados > 0 || $cantidadDia > 0) {
-                    $tieneDatos = true;
-                }
-
-                $datosEmpleado['dias'][] = [
-                    'fecha' => $fechaStr,
-                    'cantidad' => $cantidadDia,
-                    'esperadas' => $intervalosEsperados,
-                    'cumplimiento' => $intervalosEsperados > 0
-                        ? round(($cantidadDia / $intervalosEsperados) * 100, 1)
-                        : 0
+            $designaciones = traeTodasDesignaciones($empId, $fechaInicio->format('Y-m-d'), $fechaFin->format('Y-m-d'));
+            foreach ($designaciones as $desig) {
+                $turno = $desig->turno;
+                $intervalos = $desig->intervalos->pluck('id')->toArray();
+                $resultado = [
+                    'empleado_nombre' => $desig->empleado->nombres . ' ' . $desig->empleado->apellidos,
+                    'total_marcaciones' => 0,
+                    'dias' => []
                 ];
 
-                $datosEmpleado['total_marcaciones'] += $cantidadDia;
-                $fechaActual->addDay();
-            }
+                foreach (CarbonPeriod::create($fechaInicio, $fechaFin) as $fecha) {
+                    $fechaActual = $fecha->format('Y-m-d');
+                    $horainicio = Carbon::parse($turno->horainicio)->subMinutes(15)->format('H:i:s');
+                    $horafin = Carbon::parse($turno->horafin)->addMinutes(30)->format('H:i:s');
+                    $registros = collect();
+                    if (Carbon::parse($turno->horainicio)->gt(Carbon::parse($turno->horafin))) {
+                        // NOCTURNO
+                        $fechaBase = $fecha->copy();
 
-            if ($tieneDatos) {
-                $this->resultados[] = $datosEmpleado;
+                        $registros = Hombrevivo::whereIn('intervalo_id', $intervalos)
+                            ->where(function ($q) use ($fechaBase, $horainicio, $horafin, $fechaActual) {
+                                $q->where(function ($q1) use ($fechaActual, $horainicio) {
+                                    $q1->whereDate('fecha', $fechaActual)
+                                        ->where('hora', '>=', $horainicio);
+                                })
+                                ->orWhere(function ($q2) use ($fechaBase, $horafin) {
+                                    $q2->whereDate('fecha', $fechaBase->copy()->addDay()->format('Y-m-d'))
+                                        ->where('hora', '<=', $horafin);
+                                });
+                            })
+                            ->get();
+                    } else {
+                        $registros = Hombrevivo::whereDate('fecha', $fechaActual)
+                            ->whereIn('intervalo_id', $intervalos)
+                            ->whereBetween('hora', [$horainicio, $horafin])
+                            ->get();
+                    }
+
+                    // lista detallada de marcaciones (fecha y hora) para este día
+                    $marcacionesList = $registros->map(function ($r) {
+                        $fecha = \Carbon\Carbon::parse($r->fecha)->format('Y-m-d');
+                        $hora = isset($r->hora) && $r->hora ? $r->hora : \Carbon\Carbon::parse($r->fecha)->format('H:i:s');
+                        return $fecha . ' ' . $hora;
+                    })->values()->all();
+
+                    $cantReg = $registros->count();
+                    $esperadas = count($intervalos);
+                    $cumpl = $esperadas > 0 ? round(($cantReg / $esperadas) * 100, 1) : 0;
+
+                    $resultado['dias'][] = [
+                        'fecha' => $fechaActual,
+                        'hora_inicio' => $horainicio,
+                        'hora_fin' => $horafin,
+                        'cant_registros' => $cantReg,
+                        'esperadas' => $esperadas,
+                        'cumplimiento' => $cumpl,
+                        'marcaciones' => $marcacionesList,
+                    ];
+
+                    $resultado['total_marcaciones'] += $cantReg;
+                }
+
+                $resultados[] = $resultado;
             }
         }
+        $this->resultados = $resultados;
     }
 
     public function limpiar()
@@ -174,8 +179,21 @@ class ListadoHv extends Component
 
         $filename = 'reporte_hombre_vivo_' . str_replace(' ', '_', $nombreCliente) . '_' . date('Y-m-d') . '.xlsx';
 
+        $nombreClienteFiltro = $this->cliente_id ? (Cliente::find($this->cliente_id)->nombre ?? 'N/A') : 'Todos';
+        if ($this->empleado_id) {
+            $empObj = Empleado::find($this->empleado_id);
+            $nombreEmpleadoFiltro = $empObj ? ($empObj->nombres . ' ' . $empObj->apellidos) : 'N/A';
+        } else {
+            $nombreEmpleadoFiltro = 'Todos';
+        }
+
+        $filters = [
+            'cliente' => $nombreClienteFiltro,
+            'empleado' => $nombreEmpleadoFiltro,
+        ];
+
         return Excel::download(
-            new HombreVivoExport($this->resultados, $this->fecha_inicio, $this->fecha_fin),
+            new HombreVivoExport($this->resultados, $this->fecha_inicio, $this->fecha_fin, $filters),
             $filename
         );
     }
@@ -186,7 +204,6 @@ class ListadoHv extends Component
             session()->flash('warning', 'No hay datos para exportar.');
             return;
         }
-
         Carbon::setLocale('es');
         $fechaI = Carbon::parse($this->fecha_inicio);
         $fechaF = Carbon::parse($this->fecha_fin);
@@ -204,8 +221,12 @@ class ListadoHv extends Component
         }
 
         $nombreCliente = $this->cliente_id
-            ? Cliente::find($this->cliente_id)->nombre
+            ? (Cliente::find($this->cliente_id)->nombre ?? 'Todos los clientes')
             : 'Todos los clientes';
+
+        $nombreEmpleado = $this->empleado_id
+            ? (Empleado::find($this->empleado_id) ? (Empleado::find($this->empleado_id)->nombres . ' ' . Empleado::find($this->empleado_id)->apellidos) : 'N/A')
+            : 'Todos los empleados';
 
         $pdf = PDF::loadView('reports.hombre-vivo-pdf', [
             'resultados' => $this->resultados,
@@ -213,10 +234,11 @@ class ListadoHv extends Component
             'fecha_inicio' => $this->fecha_inicio,
             'fecha_fin' => $this->fecha_fin,
             'cliente' => $nombreCliente,
+            'empleado' => $nombreEmpleado,
             'fecha_reporte' => Carbon::now()->format('d/m/Y H:i')
         ])->setPaper('a4', 'landscape');
 
-        $filename = 'reporte_hombre_vivo_' . date('Y-m-d_His') . '.pdf';
+        $filename = 'reporte_hombre_vivo_' . str_replace(' ', '_', $nombreCliente) . '_' . date('Y-m-d_His') . '.pdf';
 
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->stream();

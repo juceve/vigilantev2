@@ -118,8 +118,9 @@
                                 @php
                                     $pct = $dia['cumplimiento'];
                                     $cls = $pct >= 90 ? 'success' : ($pct >= 70 ? 'warning' : ($pct > 0 ? 'danger' : 'secondary'));
+                                    $cant = isset($dia['cant_registros']) ? $dia['cant_registros'] : (isset($dia['cantidad']) ? $dia['cantidad'] : 0);
                                 @endphp
-                                <span class="badge-{{ $cls }}">{{ $dia['cantidad'] }}/{{ $dia['esperadas'] }}</span>
+                                <span class="badge-{{ $cls }}">{{ $cant }}/{{ $dia['esperadas'] }}</span>
                             @endif
                         </td>
                     @endforeach

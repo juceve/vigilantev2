@@ -88,8 +88,9 @@ class RrhhtipodescuentoController extends Controller
      * @param  Rrhhtipodescuento $rrhhtipodescuento
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Rrhhtipodescuento $rrhhtipodescuento)
+    public function update(Request $request, $rrhhtipodescuento_id)
     {
+        $rrhhtipodescuento = Rrhhtipodescuento::find($rrhhtipodescuento_id);
         request()->validate(Rrhhtipodescuento::$rules);
 
         $rrhhtipodescuento->update($request->all());

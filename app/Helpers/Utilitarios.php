@@ -33,6 +33,12 @@ function encriptar($data)
     return $encryptData;
 }
 
+function numDecimal($cantidad)
+{
+    $formateado = number_format($cantidad, 2, '.');
+    return $formateado;
+}
+
 function tablaRondas($designacione_id)
 {
     $designacione = Designacione::find($designacione_id);
@@ -201,6 +207,15 @@ function traeDesignacionActiva($empleado_id)
         ->first();
 
     return $designacione;
+}
+function traeTodasDesignaciones($empleado_id, $inicio, $fin)
+{
+    return Designacione::where('empleado_id', $empleado_id)
+        ->where(function ($q) use ($inicio, $fin) {
+            $q->where('fechaInicio', '<=', $fin)
+                ->where('fechaFin', '>=', $inicio);
+        })
+        ->get();
 }
 
 function yaMarque($designacione_id)
@@ -676,6 +691,17 @@ function tengoRondaIniciada($user_id, $cliente_id)
     return $ronda ? $ronda->id : 0;
 }
 
+function tieneDesignacionesCliente($cliente_id)
+{
+    $count = Designacione::where('estado', 1)
+
+        ->whereHas('turno', function ($query) use ($cliente_id) {
+            $query->where('cliente_id', $cliente_id);
+        })->count();
+
+    return $count > 0;
+}
+
 function traerDesignacionContrato($rrhhcontrato_id)
 {
     try {
@@ -839,5 +865,5 @@ function ultInspeccion($cliente_id)
         ->orderBy('id', 'desc')
         ->first();
 
-        return $inspeccion;
+    return $inspeccion;
 }

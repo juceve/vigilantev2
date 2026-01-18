@@ -7,17 +7,17 @@ use App\Models\Inspeccion;
 use App\Models\SupBoleta;
 use App\Models\Tipoboleta;
 use Carbon\Carbon;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class EmitirBoleta extends Component
 {
-   
+
 
     public $inspeccionActiva, $empleados, $empleadosSeleccionados = [];
     public $searchEmpleado = '';
-    public $selTipoBoletaId = '', $selTipoBoleta, $detalles;
+    public $selTipoBoletaId = '', $selTipoBoleta, $detalles = '';
     public $procesando = false;
 
     public function mount($inspeccion_id)
@@ -84,7 +84,7 @@ class EmitirBoleta extends Component
                 $q->where('activo', true)
                     ->whereDate('fecha_inicio', '<=', $hoy)
                     ->whereDate('fecha_fin', '>=', $hoy);
-            })            
+            })
             ->get()
             ->map(function ($designacione) {
                 return [
@@ -100,7 +100,7 @@ class EmitirBoleta extends Component
         'selTipoBoletaId' => 'required',
     ];
 
-    protected $listeners = ['emitirBoleta'] ;
+    protected $listeners = ['emitirBoleta'];
 
     public function emitirBoleta()
     {
@@ -123,7 +123,7 @@ class EmitirBoleta extends Component
                     'empleado_id' => $empleado_id,
                     'tipoboleta_id' => $this->selTipoBoletaId,
                     'supervisor_id' => $this->inspeccionActiva->designacionsupervisor->empleado_id,
-                    'detalles' => $this->detalles??'N/A',
+                    'detalles' => $this->detalles ?? 'N/A',
                     'descuento' => $tipoboleta->monto_descuento,
                 ]);
             }

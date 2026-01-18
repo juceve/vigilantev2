@@ -152,21 +152,29 @@
     <div class="row g-2 mb-2">
         <div class="col-12 col-sm-4 mb-1">
             <a href="{{ route('vigilancia.vacaciones') }}"
-                class="btn btn-info w-100 text-dark d-flex flex-column align-items-center justify-content-center py-3">
+                class="btn btn-info w-100 text-secondary d-flex flex-column align-items-center justify-content-center py-3">
                 <i class="fas fa-calendar-check fa-2x mb-2"></i>
                 <span class="fw-semibold">Permisos y Vacaciones</span>
             </a>
         </div>
         <div class="col-12 col-sm-4 mb-1">
             <a href="{{ route('vigilancia.adelantos') }}"
-                class="btn btn-primary w-100 text-dark d-flex flex-column align-items-center justify-content-center py-3">
+                class="btn btn-primary w-100 text-secondary d-flex flex-column align-items-center justify-content-center py-3">
                 <i class="fas fa-hand-holding-usd fa-2x mb-2"></i>
                 <span class="fw-semibold">Adelantos</span>
             </a>
         </div>
         <div class="col-12 col-sm-4 mb-1">
+            <a href="{{ route('vigilancia.boletas') }}"
+                class="btn w-100 text-secondary d-flex flex-column align-items-center justify-content-center py-3"
+                style="background-color: #ff6c6c">
+                <i class="fas fa-receipt fa-2x mb-2"></i>
+                <span class="fw-semibold">Mis Boletas</span>
+            </a>
+        </div>
+        <div class="col-12 col-sm-4 mb-1">
             <a  href="{{ route('vigilancia.asistencias') }}"
-            class="btn btn-warning w-100 d-flex flex-column align-items-center justify-content-center py-3">
+            class="btn btn-warning text-secondary w-100 d-flex flex-column align-items-center justify-content-center py-3">
                 <i class="fas fa-user-clock fa-2x mb-2"></i>
                 <span class="fw-semibold">Asistencias</span>
             </a>

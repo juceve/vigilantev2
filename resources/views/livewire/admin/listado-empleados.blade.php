@@ -31,24 +31,22 @@
         <table class="table table-striped table-hover">
             <thead class="thead table-info">
                 <tr>
-                    <th>No</th>
+                    <th>ID</th>
 
                     <th>Nombres</th>
                     <th>Apellidos</th>
 
                     <th>Area</th>
-                    <th>Estado</th>
+                    <th>Usuario</th>
                     {{-- <th>Oficina</th> --}}
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @php
-                    $i = 0;
-                @endphp
+               
                 @foreach ($empleados as $empleado)
                     <tr>
-                        <td>{{ ++$i }}</td>
+                        <td>{{ $empleado->id }}</td>
 
                         <td>{{ $empleado->nombres }}</td>
                         <td>{{ $empleado->apellidos }}</td>

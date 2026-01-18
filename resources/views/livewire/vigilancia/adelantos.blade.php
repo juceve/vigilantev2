@@ -9,6 +9,33 @@
 
     </div>
 
+     <!-- Profile card -->
+    <div class="card shadow-sm mb-3">
+        <div class="card-body p-3">
+            <div class="d-flex align-items-center">
+                <!-- Avatar -->
+                <div class="flex-shrink-0 me-3">
+                    @php
+                    $avatar = $empleado->avatar ?? null;
+                    $placeholder = 'https://ui-avatars.com/api/?name=' . urlencode($empleado->nombres.'
+                    '.$empleado->apellidos ?? 'Empleado') . '&background=0D6EFD&color=fff&rounded=true&size=128';
+                    $avatarUrl = $empleado->imgperfil ? asset('storage/'.$empleado->imgperfil) : $placeholder;
+                    @endphp
+                    <img src="{{ $avatarUrl }}" alt="Avatar" class="rounded-circle"
+                        style="width:84px;height:84px;object-fit:cover;">
+                </div>
+
+                <!-- Info -->
+                <div class="flex-grow-1">
+                    <h5 class="mb-0 text-primary">{{ $empleado->nombres ?? 'Nombre' }} {{ $empleado->apellidos ??
+                        'Apellidos' }}</h5>
+                    <small class="text-blue d-block mb-2"><strong>{{ $empleado->area->nombre ?? 'Cargo / Puesto'
+                            }}</strong></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-body d-grid">
             <h5 class="card-title text-center text-muted">Solicitudes registradas</h5>

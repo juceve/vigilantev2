@@ -101,7 +101,7 @@
                     </div>
                     <div class="form-group mb-3">
                         <label><strong>Detalles</strong></label>
-                        <textarea class="form-control" rows="2" placeholder="Descripción corta del motivo" wire.model.lazy="detalles"></textarea>
+                        <textarea class="form-control" rows="2" placeholder="Descripción corta del motivo" wire:model.lazy="detalles"></textarea>
                     </div>
                     <div class="d-grid">
                         <button class="btn btn-danger py-3" onclick="emitirBoleta()">

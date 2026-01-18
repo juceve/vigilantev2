@@ -20,11 +20,26 @@ class ListadoEmpleados extends Component
 
     public function render()
     {
+        // $empleados = Empleado::join('areas', 'areas.id', '=', 'empleados.area_id')
+        //     ->select('empleados.*', 'areas.nombre')
+        //     ->where('empleados.nombres', 'LIKE', '%' . $this->busqueda . '%')
+        //     ->orWhere('empleados.apellidos', 'LIKE', '%' . $this->busqueda . '%')
+        //     ->orWhere('areas.nombre', 'LIKE', '%' . $this->busqueda . '%')
+        //     ->paginate($this->filas);
         $empleados = Empleado::join('areas', 'areas.id', '=', 'empleados.area_id')
-            ->select('empleados.*', 'areas.nombre')
-            ->where('empleados.nombres', 'LIKE', '%' . $this->busqueda . '%')
-            ->orWhere('empleados.apellidos', 'LIKE', '%' . $this->busqueda . '%')
-            ->orWhere('areas.nombre', 'LIKE', '%' . $this->busqueda . '%')
+            ->leftJoin('users', 'users.id', '=', 'empleados.user_id')
+            ->select(
+                'empleados.*',
+                'areas.nombre as area_nombre',
+                'users.status as user_status'
+            )
+            ->where(function ($q) {
+                $q->where('empleados.nombres', 'LIKE', '%' . $this->busqueda . '%')
+                    ->orWhere('empleados.apellidos', 'LIKE', '%' . $this->busqueda . '%')
+                    ->orWhere('areas.nombre', 'LIKE', '%' . $this->busqueda . '%');
+            })
+            ->orderByDesc('users.status') // 👑 status = 1 primero
+            ->orderByDesc('empleados.id')
             ->paginate($this->filas);
 
         $parametros = $this->busqueda;

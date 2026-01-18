@@ -37,7 +37,11 @@
             </thead>
             <tbody>
                 @foreach ($clientes as $cliente)
-                <tr>
+                <tr 
+                @if (!tieneDesignacionesCliente($cliente->id))
+                    class='table-danger' title="Cliente sin designaciones activas"
+                @endif
+                >
                     <td>{{ ++$i }}</td>
 
                     <td>{{ $cliente->nombre }}</td>
