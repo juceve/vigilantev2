@@ -27,7 +27,7 @@ class Designacione extends Model
 
     static $rules = [
         'empleado_id' => 'required',
-        'turno_id' => 'required',
+        // 'turno_id' => 'required',
         'fechaInicio' => 'required',
         'fechaFin' => 'required',
         'intervalo_hv' => 'required',
@@ -41,7 +41,7 @@ class Designacione extends Model
      *
      * @var array
      */
-    protected $fillable = ['empleado_id', 'turno_id', 'fechaInicio', 'fechaFin', 'intervalo_hv', 'observaciones', 'estado'];
+    protected $fillable = ['empleado_id', 'tipo_designacion', 'turno_id', 'fechaInicio', 'fechaFin', 'intervalo_hv', 'observaciones', 'estado'];
 
 
     /**

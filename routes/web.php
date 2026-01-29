@@ -121,11 +121,13 @@ use App\Http\Controllers\TipoboletaController;
 use App\Http\Livewire\Admin\CajaChica;
 use App\Http\Livewire\Admin\ListadoCuestionarios;
 use App\Http\Livewire\Admin\ListadoDesignacionesSupervisores;
+use App\Http\Livewire\Admin\ManageTurnoguardias;
 use App\Http\Livewire\Supervisores\Panel;
 use App\Http\Livewire\Vigilancia\Adelantos;
 use App\Http\Livewire\Vigilancia\Asistencias;
 use App\Http\Livewire\Vigilancia\Boletas;
 use App\Models\Empleado;
+use App\Models\Turnoguardia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -252,6 +254,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('admin/flujo-pases', Flujopases::class)->name('admin.flujopases');
     Route::get('admin/cronograma-dias-libres', CronogramaMensualEmpleados::class)->middleware('can:admin.cronogramadiaslibres')->name('admin.cronogramadiaslibres');
     Route::get('admin/resumen-operacional', ResumenOpercional::class)->middleware('can:admin.resumenoperacional')->name('admin.resumenoperacional');
+    Route::get('admin/supervisores/turnos', ManageTurnoguardias::class)->name('admin.turnosupervisores');
     Route::get('admin/designaciones/supervisores/', ListadoDesignacionesSupervisores::class)->name('admin.designacionessupervisores');
     Route::get('admin/listado-cuestionarios', ListadoCuestionarios::class)->name('admin.listadocuestionarios');
 

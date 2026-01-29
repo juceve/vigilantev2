@@ -19,51 +19,136 @@
                     </div>
 
                 </div>
-                 @if ($contrato)
-                <small class="text-success">* Vigencia Contrato: [{{$contrato->fecha_inicio}} - {{$contrato->fecha_fin??'Indefinido'}}]</small>
-            @endif
+                @if ($contrato)
+                    <small class="text-success">* Vigencia Contrato: [{{ $contrato->fecha_inicio }} -
+                        {{ $contrato->fecha_fin ?? 'Indefinido' }}]</small>
+                @endif
             </div>
-        </div>
-        <div class="col-12 col-md-6">
-
         </div>
         @if ($empleado)
             <div class="col-12 col-md-6">
-                <div class="form-group">
-                    <label>Clientes:</label>
-                    <select name="clienteid" wire:model='clienteid' class="form-control">
-                        <option value="">Seleccione un cliente</option>
-                        @foreach ($clientes as $cliente)
-                            <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
-                        @endforeach
-                    </select>
-                    @error('clienteid')
-                        <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ $message }}</small>
-                    @enderror
-                </div>
+                <label>Tipo Designacion</label>
+                <select class="form-control" wire:model='tipo_designacion'>
+                    <option value="">Seleccione un tipo</option>
+                    <option value="GUARDIA">GUARDIA</option>
+                    <option value="SUPERVISOR">SUPERVISOR</option>
+                    <option value="ADMIN">ADMIN</option>
+                </select>
             </div>
-            <div class="col-12 col-md-6">
+        @endif
+        @if ($empleado && $tipo_designacion)
+            {{-- Campos segun tipo de designacion --}}
+
+            @switch($tipo_designacion)
+                @case('GUARDIA')
+                    {{-- GUARDIAS --}}
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label>Clientes:</label>
+                            <select name="clienteid" wire:model='clienteid' class="form-control">
+                                <option value="">Seleccione un cliente</option>
+                                @foreach ($clientes as $cliente)
+                                    <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
+                                @endforeach
+                            </select>
+                            @error('clienteid')
+                                <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ $message }}</small>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label>Turno:</label>
+                            <select name="turnoid" wire:model='turnoid' class="form-control">
+                                <option value="">Seleccione un turno</option>
+                                @if ($clienteSeleccionado)
+                                    @foreach ($clienteSeleccionado->turnos as $turno)
+                                        <option value="{{ $turno->id }}">{{ $turno->nombre }}</option>
+                                    @endforeach
+                                @else
+                                    <option value="">-- Seleccione un Cliente --</option>
+                                @endif
+                            </select>
+                            @error('turnoid')
+                                <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ $message }}</small>
+                            @enderror
+                        </div>
 
 
-                <div class="form-group">
-                    <label>Turno:</label>
-                    <select name="turnoid" wire:model='turnoid' class="form-control">
-                        <option value="">Seleccione un turno</option>
-                        @if ($clienteSeleccionado)
-                            @foreach ($clienteSeleccionado->turnos as $turno)
-                                <option value="{{ $turno->id }}">{{ $turno->nombre }}</option>
+                    </div>
+                @break
+
+                @case('SUPERVISOR')
+                    {{-- SUPERVISOR --}}
+                    <div class="col-12 col-md-10 mb-3">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Clientes</span>
+                            </div>
+                            <select class="form-control  @error('arrayClientes') is-invalid @enderror" wire:model='cliente_id'>
+                                <option value="">-- Seleccione Cliente --</option>
+                                @foreach ($clientes as $cliente)
+                                    <option value="{{ $cliente->id }}">
+                                        {{ $cliente->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <button class="btn btn-outline-success btn-block" type="button" wire:click='agregarCliente'>
+                            Agregar <i class="fas fa-arrow-down"></i>
+                        </button>
+                    </div>
+                    <div class="col-12">
+                        @error('arrayClientes')
+                            <small class="text-danger">Debe agregar al menos 1 Cliente</small>
+                        @enderror
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-sm" style="font-size: 13px;">
+                                <thead>
+                                    <tr class="table-info text-center">
+                                        <th>ID</th>
+                                        <th>CLIENTE</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($arrayClientes as $client)
+                                        <tr>
+                                            <td class="text-center">{{ $client['id'] }}</td>
+                                            <td>{{ $client['nombre'] }}</td>
+                                            <td class="text-center">
+                                                <button class="btn btn-danger btn-sm" type="button"
+                                                    wire:click='quitarCliente({{ $loop->index }})'>
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td class="text-center" colspan="3">No hay clientes agregados.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label>Turno</label>
+                        <select class="form-control" wire:model='turnoguardia_id'>
+                            <option value="">-- Seleccione un Turno --</option>
+                            @foreach ($turnoguardias as $turnog)
+                                <option value="{{ $turnog->id }}">{{ $turnog->nombre }} - [{{ $turnog->horainicio }} -
+                                    {{ $turnog->horafin }}]</option>
                             @endforeach
-                        @else
-                            <option value="">-- Seleccione un Cliente --</option>
-                        @endif
-                    </select>
-                    @error('turnoid')
-                        <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ $message }}</small>
-                    @enderror
-                </div>
+                        </select>
+                    </div>
+                @break
+
+                @default
+            @endswitch
 
 
-            </div>
             <div class="col-12 col-md-6">
                 <div class="form-group">
                     <label>Fecha Inicio:</label>
@@ -82,15 +167,18 @@
                     @enderror
                 </div>
             </div>
-            <div class="col-12 col-md-6">
-                <div class="form-group">
-                    <label>Intervalo Hrs:</label> <small>Alerta Hombre Vivo</small>
-                    <input type="number" class="form-control" wire:model.defer='intervalo_hv'>
-                    @error('intervalo_hv')
-                        <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ $message }}</small>
-                    @enderror
+            @if ($tipo_designacion === 'GUARDIA')
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label>Intervalo Hrs:</label> <small>Alerta Hombre Vivo</small>
+                        <input type="number" class="form-control" wire:model.defer='intervalo_hv'>
+                        @error('intervalo_hv')
+                            <small class="text-danger"><i class="fas fa-exclamation-circle"></i>
+                                {{ $message }}</small>
+                        @enderror
+                    </div>
                 </div>
-            </div>
+            @endif
             <div class="col-12 col-md-6">
                 <div class="form-group">
                     <label>Observaciones:</label>
@@ -101,7 +189,8 @@
                 </div>
             </div>
             <div class="col-12">
-                <label>Días laborales:</label> <button class="btn btn-sm btn-outline-info" wire:click="seleccionarTodosDias">Sel. Todo <i class="fas fa-check-double"></i></button>
+                <label>Días laborales:</label> <button class="btn btn-sm btn-outline-info"
+                    wire:click="seleccionarTodosDias">Sel. Todo <i class="fas fa-check-double"></i></button>
                 <div class="row">
                     <div class="col-6 col-md-2">
                         <div class="form-check">
@@ -148,6 +237,12 @@
 
                 </div>
             </div>
+
+
+
+
+
+
             <div class="col-12 col-md-6 mt-2">
                 <button class="btn btn-block btn-success" wire:click='registrar'><i class="fas fa-save"></i>
                     Registrar</button>

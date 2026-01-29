@@ -5,10 +5,14 @@ namespace App\Http\Livewire\Admin;
 use App\Models\Cliente;
 use App\Models\Designaciondia;
 use App\Models\Designacione;
+use App\Models\Designacioneturno;
+use App\Models\Designacionsupervisor;
+use App\Models\Designacionsupervisorcliente;
 use App\Models\Empleado;
 use App\Models\Intervalo;
 use App\Models\Rrhhcontrato;
 use App\Models\Turno;
+use App\Models\Turnoguardia;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -17,12 +21,15 @@ class NuevaDesignacion extends Component
 {
     public $designacione = null;
     public $empleadoid = "", $empleado = null, $nombres = "",  $clienteid = "", $clienteSeleccionado = null;
-    public $turnoid = "", $fechaInicio = "", $fechaFin = "", $intervalo_hv = 0, $observaciones = "";
+    public $turnoid = NULL, $fechaInicio = "", $fechaFin = "", $intervalo_hv = 0, $observaciones = "";
     public $lunes = false, $martes = false, $miercoles = false, $jueves = false, $viernes = false, $sabado = false, $domingo = false;
     public $contrato = NULL;
+    public $tipo_designacion = "", $arrayClientes = [], $procesando = false, $estado, $cliente_id = "", $turnoguardia_id = "";
+
 
     protected $rules = [
         'empleadoid' => 'required',
+        'tipo_designacion' => 'required',
         'clienteid' => 'required',
         'turnoid' => 'required',
         'fechaInicio' => 'required',
@@ -85,16 +92,6 @@ class NuevaDesignacion extends Component
 
     public function render()
     {
-        // $empleados = DB::table('empleados')
-        //     ->join('areas', 'areas.id', '=', 'empleados.area_id')
-        //     ->join('oficinas', 'oficinas.id', '=', 'empleados.oficina_id')
-        //     ->join('users', 'users.id', '=', 'empleados.user_id')
-        //     ->where('areas.template', '=', 'OPER')
-        //     ->where('users.status', '=', 1)
-        //     ->select('empleados.*', 'oficinas.nombre as oficina')->get();
-
-
-
         $empleados = DB::table('empleados as e')
             ->join('rrhhcontratos as c', 'c.empleado_id', '=', 'e.id')
             ->where('c.activo', true) // contrato activo
@@ -125,36 +122,94 @@ class NuevaDesignacion extends Component
         $clientes = Cliente::all();
         $clientes->pluck('nombre', 'id');
 
+        $turnoguardias = Turnoguardia::all();
+
         $this->emit('dataTableNormal');
 
-        return view('livewire.admin.nueva-designacion', compact('empleados', 'clientes'));
+        return view('livewire.admin.nueva-designacion', compact('empleados', 'clientes', 'turnoguardias'));
     }
 
     protected $listeners = ['seleccionaEmpleado'];
 
     public function registrar()
     {
-        $this->validate();
+        if ($this->procesando) {
+            return;
+        }
+        $this->procesando = true;
+        
+        // Validaciones base
+        $this->validate([
+            'empleadoid' => 'required',
+            'tipo_designacion' => 'required',
+            'fechaInicio' => 'required|date',
+            'fechaFin' => 'required|date|after_or_equal:fechaInicio',
+        ]);
+
+        // Validaciones por tipo de designación
+        if ($this->tipo_designacion === 'GUARDIA') {
+            $this->validate([
+                'clienteid' => 'required',
+                'turnoid' => 'required',
+                'intervalo_hv' => 'nullable|numeric|min:0',
+            ]);
+        } elseif ($this->tipo_designacion === 'SUPERVISOR') {
+            // Debe tener al menos 1 cliente en arrayClientes y seleccionar un turno de guardia
+            if (empty($this->arrayClientes) || count($this->arrayClientes) < 1) {
+                $this->addError('arrayClientes', 'Debe agregar al menos 1 Cliente para SUPERVISOR.');
+                return;
+            }
+            if (empty($this->turnoguardia_id)) {
+                $this->addError('turnoguardia_id', 'Debe seleccionar un Turno para SUPERVISOR.');
+                return;
+            }
+        } else {
+            // Otros tipos pueden tener validaciones específicas si se requiere
+        }
 
         DB::beginTransaction();
         try {
             $designacion = Designacione::create([
                 "empleado_id" => $this->empleadoid,
-                "turno_id" => $this->turnoid,
+                "tipo_designacion" => $this->tipo_designacion,
+                "turno_id" => $this->turnoid ?? NULL,
                 "fechaInicio" => $this->fechaInicio,
                 "fechaFin" => $this->fechaFin,
                 "intervalo_hv" => $this->intervalo_hv,
                 "observaciones" => $this->observaciones,
             ]);
-            $turno = Turno::find($this->turnoid);
-            $intervalo = [];
-            $intervalo = crearIntervalo($turno->horainicio, $turno->horafin, $this->intervalo_hv);
-            foreach ($intervalo as $item) {
-                Intervalo::create([
-                    "designacione_id" => $designacion->id,
-                    "hora" => $item,
-                ]);
+            switch ($this->tipo_designacion) {
+                case 'GUARDIA':
+                    $turno = Turno::find($this->turnoid);
+                    $intervalo = [];
+                    $intervalo = crearIntervalo($turno->horainicio, $turno->horafin, $this->intervalo_hv);
+                    foreach ($intervalo as $item) {
+                        Intervalo::create([
+                            "designacione_id" => $designacion->id,
+                            "hora" => $item,
+                        ]);
+                    }
+                    break;
+
+                case 'SUPERVISOR':
+                    $designacionsup = Designacionsupervisor::create([
+                        'empleado_id' => $this->empleadoid,
+                        'fechaInicio' => $this->fechaInicio,
+                        'observaciones' => $this->observaciones,
+                    ]);
+                    foreach ($this->arrayClientes as $cliente) {
+                        Designacionsupervisorcliente::create([
+                            'designacionsupervisor_id' => $designacionsup->id,
+                            'cliente_id' => $cliente['id'],
+                        ]);
+                    }
+                    $designacionturno = Designacioneturno::create([
+                        "designacione_id" => $designacion->id,
+                        "turnoguardia_id" => $this->turnoguardia_id,
+                    ]);
+                    break;
             }
+
 
             $dias = Designaciondia::create([
                 "designacione_id" => $designacion->id,
@@ -170,11 +225,51 @@ class NuevaDesignacion extends Component
 
 
             DB::commit();
-            redirect()->route('designaciones.index')->with('success', 'Designación registrada correctamente.');
+            switch ($this->tipo_designacion) {
+                case 'GUARDIA':
+                    redirect()->route('designaciones.index')->with('success', 'Designación registrada correctamente.');
+                    break;
+                
+                case 'SUPERVISOR':
+                    redirect()->route('admin.designacionessupervisores')->with('success', 'Designación registrada correctamente.');
+                    break;
+            }
+            
         } catch (\Throwable $th) {
             // $this->emit('error', $th->getMessage());
             $this->emit('error', 'Ha ocurrido un error');
             DB::rollBack();
         }
+    }
+
+    public function agregarCliente()
+    {
+        $this->validate([
+            'cliente_id' => 'required',
+        ]);
+        $cliente = Cliente::find($this->cliente_id);
+        if (!$cliente) {
+            $this->emit('alert', 'error', 'El cliente seleccionado no es válido');
+            return;
+        }
+        $existingIds = array_column($this->arrayClientes, 'id');
+        if (in_array($cliente->id, $existingIds)) {
+            $this->emit('error', 'El cliente ya fue agregado.');
+            $this->reset('cliente_id');
+            return;
+        }
+
+        $this->arrayClientes[] = [
+            'id' => $cliente->id,
+            'nombre' => $cliente->nombre,
+        ];
+
+        $this->reset('cliente_id');
+    }
+
+    public function quitarCliente($i)
+    {
+        unset($this->arrayClientes[$i]);
+        $this->arrayClientes = array_values($this->arrayClientes);
     }
 }

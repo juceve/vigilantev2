@@ -36,7 +36,7 @@ class Designacionsupervisor extends Model
      *
      * @var array
      */
-    protected $fillable = ['empleado_id','fechaInicio','fechaFin','observaciones','estado'];
+    protected $fillable = ['empleado_id','turnoguardia_id','fechaInicio','fechaFin','observaciones','estado'];
 
 
     /**

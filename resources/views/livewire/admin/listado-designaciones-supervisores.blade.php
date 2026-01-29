@@ -9,8 +9,8 @@
         <div class="card-body">
             <div class="d-flex justify-content-between mb-3">
                 <h5>LISTADO DE DESIGNACIONES</h5>
-                <button class="btn btn-primary btn-sm" type="button" wire:click="create">Nueva <i
-                        class="fas fa-plus"></i></button>
+                <a href="{{ route('designaciones.create') }}" class="btn btn-primary btn-sm" type="a" wire:click="create">Nueva <i
+                        class="fas fa-plus"></i></a>
             </div>
 
             <div class="row">

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('designaciones', function (Blueprint $table) {
             $table->id();
             $table->foreignId('empleado_id')->nullable()->constrained()->nullOnDelete();
+            $table->enum('tipo_designacion', ['GUARDIA', 'SUPERVISOR','ADMIN'])->default('VIGILANTE');
             $table->foreignId('turno_id')->nullable()->constrained()->nullOnDelete();
             $table->date('fechaInicio');
             $table->date('fechaFin');

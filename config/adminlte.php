@@ -317,7 +317,7 @@ return [
 
         [
             'text' => 'Guardias',
-            'icon' => 'fas fa-fw fa-user-tag',
+            'icon' => 'fas fa-fw fa-user-shield',
             'submenu' => [
                 [
                     'text' => 'Designaciones',
@@ -344,6 +344,12 @@ return [
                     // 'can'   =>  'designaciones.index',
                 ],
                 [
+                    'text' => 'Turnos',
+                    'route' => 'admin.turnosupervisores',
+                    'icon' => 'fas fa-clock',
+                    // 'can'   =>  'designaciones.index',
+                ],
+                [
                     'text' => 'Caja Chica',
                     'route' => 'admin.cajachica',
                     'icon' => 'fas fa-wallet',
@@ -367,6 +373,12 @@ return [
                     'url' => 'admin/empleados',
                     'can' => 'empleados.index',
                     'icon' => 'fas fa-fw fa-users'
+                ],
+                [
+                    'text' => 'Nueva Designación',
+                    'route' => 'designaciones.create',
+                    'can' => 'designaciones.create',
+                    'icon' => 'fas fa-fw fa-user-tag'
                 ],
                 [
                     'text' => 'Sueldos',
